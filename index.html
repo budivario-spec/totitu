@@ -152,5 +152,20 @@
     </script>
 
     <script src="./js/app.js"></script>
+
+    <div id="detailModal" class="fixed inset-0 z-[200] hidden bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 overflow-y-auto max-h-[90vh]">
+        <h2 id="modalTitle" class="text-2xl font-bold text-blue-600 mb-2"></h2>
+        <iframe id="modalVideo" class="w-full h-48 rounded-2xl mb-4" src="" frameborder="0" allowfullscreen></iframe>
+        <p id="modalDesc" class="text-gray-600 text-sm mb-4"></p>
+        <div class="flex justify-between text-sm font-bold mb-6">
+            <span>Durasi: <span id="modalDuration" class="text-orange-500"></span></span>
+            <span>Harga: <span id="modalPrice" class="text-green-500"></span></span>
+        </div>
+        <a id="btnWA" href="#" class="block text-center bg-green-500 text-white font-bold py-3 rounded-full mb-2">PESAN SEKARANG</a>
+        <button onclick="document.getElementById('detailModal').classList.add('hidden')" class="w-full text-gray-400">TUTUP</button>
+    </div>
+    </div>
+
 </body>
 </html>
