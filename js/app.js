@@ -29,6 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('detailModal').classList.remove('hidden');
     };
 
+    function closeModal() {
+    const modal = document.getElementById('detailModal');
+    const videoIframe = document.getElementById('modalVideo');
+    
+    // 1. Sembunyikan modal
+    modal.classList.add('hidden');
+    
+    // 2. Hentikan suara video dengan mengosongkan src
+    videoIframe.src = "";
+}
+
     // Render Kartu Pertama
     container.innerHTML = `
         <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 cursor-pointer" 
