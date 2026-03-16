@@ -23,81 +23,29 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Container Utama */
         .page-container {
-            padding: 20px 20px 70px 20px; /* Padding bawah 100px untuk ruang navigasi */
+            padding: 20px 20px 70px 20px;
             min-height: 100vh;
             box-sizing: border-box;
         }
 
-        .card-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-        }
-
-        .card-content-wrapper {
-            position: relative;
-            z-index: 10;
-        }
-
-        .card-interactive {
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .card-interactive:active {
-            transform: scale(0.90);
-        }
-
-        .card-image-base {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            border: 4px solid white;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.15);
-        }
-
-        .btn-custom { 
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2); 
-            transition: transform 0.1s ease;
-        }
-        
-        .btn-custom:active {
-            transform: translateY(4px);
-            box-shadow: none;
-        }
-        
-        .text-shadow-bold {
-            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
-        }
+        .text-shadow-bold { text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3); }
 
         nav {
-            /* Border kaca tipis */
             border-top: 0.5px solid rgba(255, 255, 255, 0.5);
-            
-            /* Warna latar belakang sangat transparan (30%) */
             background: rgba(255, 255, 255, 0.3);
-            
-            /* Efek Blur */
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            
-            /* Dimensi */
             height: 60px;
-            
-            /* Bayangan minimalis */
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: #4b5563;;
-            -webkit-tap-highlight-color: transparent;
+            color: #4b5563;
         }
 
         .nav-active {
@@ -118,99 +66,20 @@
                 <p class="text-sm drop-shadow-md opacity-90">BERMAIN & BELAJAR!</p>
             </header>
 
-            <main class="space-y-4">
-                <div class="card-image-base card-interactive h-32 flex flex-col items-start justify-center p-5" 
-                     ontouchstart="" style="background-image: url('assets/images/bg_game.png');"> 
-                    <div class="card-overlay"></div>
-                    <div class="card-content-wrapper">
-                        <h3 class="text-white text-md">FUN GAME</h3>
-                        <button class="fas fa-gamepad text-white text-4xl mt-1"></button> 
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" ontouchstart="" style="background-image: url('assets/images/bg_story.png');">
-                        <div class="card-overlay"></div>
-                        <div class="card-content-wrapper">
-                            <h3 class="text-white text-xs">STORY TELLING</h3>
-                            <button class="mt-1 bg-pink-500 text-white text-[10px] px-3 py-1 rounded-full btn-custom">DENGARKAN</button>
-                        </div>
-                    </div>
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" ontouchstart="" style="background-image: url('assets/images/bg_komik.png');">
-                        <div class="card-overlay"></div>
-                        <div class="card-content-wrapper">
-                            <h3 class="text-white text-xs">BUAT KOMIK</h3>
-                            <button class="mt-1 bg-green-500 text-white text-[10px] px-3 py-1 rounded-full btn-custom">AYO BIKIN!</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" ontouchstart="" style="background-image: url('assets/images/bg_sulap.png');">
-                        <div class="card-overlay"></div>
-                        <div class="card-content-wrapper">
-                            <h3 class="text-white text-xs">SULAP TEMATIK</h3>
-                            <button class="mt-1 bg-yellow-500 text-purple-900 text-[10px] px-3 py-1 rounded-full btn-custom">LIHAT!</button>
-                        </div>
-                    </div>
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" ontouchstart="" style="background-image: url('assets/images/bg_nobar.png');">
-                        <div class="card-overlay"></div>
-                        <div class="card-content-wrapper">
-                            <h3 class="text-white text-xs">NOBAR KLIP 3D</h3>
-                            <button class="mt-1 bg-red-500 text-white text-[10px] px-3 py-1 rounded-full btn-custom">NONTON!</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" ontouchstart="" style="background-image: url('assets/images/bg_parenting.png');">
-                        <div class="card-overlay"></div>
-                        <div class="card-content-wrapper">
-                            <h3 class="text-white text-xs">PARENTING</h3>
-                            <button class="mt-1 bg-blue-600 text-white text-[10px] px-3 py-1 rounded-full btn-custom">TIPS!</button>
-                        </div>
-                    </div>
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" ontouchstart="" style="background-image: url('assets/images/bg_outbound.png');">
-                        <div class="card-overlay"></div>
-                        <div class="card-content-wrapper">
-                            <h3 class="text-white text-xs">OUTBOUND</h3>
-                            <button class="mt-1 bg-green-600 text-white text-[10px] px-3 py-1 rounded-full btn-custom">BERANGKAT!</button>
-                        </div>
-                    </div>
-                </div>
-
-            </main>
+            <main id="menuContainer" class="space-y-4">
+                </main>
         </div>
 
         <div id="page-testimoni" class="page-content hidden space-y-6">
             <h2 class="text-2xl text-white text-shadow-bold text-center">CERITA MEREKA</h2>
-            <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-pink-500 card-interactive">
-                <p class="text-gray-700 italic text-sm">"Totitu bikin anak saya jadi suka bikin cerita sendiri. Fitur komiknya juara banget!"</p>
-                <span class="block mt-2 font-bold text-xs text-pink-600">- Bunda Shinta, Jakarta</span>
             </div>
-            <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-yellow-500 card-interactive">
-                <p class="text-gray-700 italic text-sm">"Fun Game-nya seru dan edukatif. Sangat membantu kegiatan akhir pekan kami!"</p>
-                <span class="block mt-2 font-bold text-xs text-yellow-600">- Pak Budi, Bandung</span>
-            </div>
-        </div>
 
         <div id="page-profil" class="page-content hidden">
-            <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
-                <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <img src="assets/images/logo_totitu.png" alt="Logo Totitu" class="w-full h-full object-contain">
-                </div>
-                <h2 class="text-xl font-black text-blue-600 mb-2">TENTANG TOTITU</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    Kami adalah wadah kreatifitas yang percaya bahwa setiap anak memiliki bakat luar biasa melalui media digital yang aman.
-                </p>
-                <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
-                    <div class="bg-blue-50 p-3 rounded-2xl text-blue-700">Aman Bagi Anak</div>
-                    <div class="bg-green-50 p-3 rounded-2xl text-green-700">Konten Edukatif</div>
-                </div>
             </div>
-        </div>
 
-    </div> <div id="popup-search" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-6">
+    </div>
+
+    <div id="popup-search" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-6">
         <div class="bg-white w-full max-w-xs rounded-3xl p-6 shadow-2xl">
             <h3 class="text-lg text-center mb-4 text-gray-800">Cari Materi</h3>
             <input type="text" class="w-full border-2 border-orange-100 rounded-full px-4 py-2 mb-4 focus:outline-none" placeholder="Ketik di sini...">
@@ -219,45 +88,30 @@
     </div>
 
     <nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-50">
-    <a href="javascript:void(0)" class="nav-item nav-active flex flex-col items-center" onclick="showPage('home', this)" ontouchstart="">
-        <i class="fas fa-home text-xl"></i>        
-    </a>
-    <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="toggleSearch()" ontouchstart="">
-        <i class="fas fa-search text-xl"></i>       
-    </a>
-    <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('testimoni', this)" ontouchstart="">
-        <i class="fas fa-star text-xl"></i>        
-    </a>
-    <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('profil', this)" ontouchstart="">
-        <i class="fas fa-user text-xl"></i>
-    </a>
-</nav>
+        <a href="javascript:void(0)" class="nav-item nav-active flex flex-col items-center" onclick="showPage('home', this)">
+            <i class="fas fa-home text-xl"></i>        
+        </a>
+        <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="toggleSearch()">
+            <i class="fas fa-search text-xl"></i>       
+        </a>
+        <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('testimoni', this)">
+            <i class="fas fa-star text-xl"></i>        
+        </a>
+        <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('profil', this)">
+            <i class="fas fa-user text-xl"></i>
+        </a>
+    </nav>
 
     <script>
         function showPage(pageId, element) {
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.add('hidden');
-            });
+            document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
             document.getElementById('page-' + pageId).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('nav-active');
-            });
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('nav-active'));
             element.classList.add('nav-active');
         }
 
         function toggleSearch() {
             document.getElementById('popup-search').classList.toggle('hidden');
-        }
-    </script>
-
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then((reg) => console.log('Service Worker terdaftar!', reg))
-                    .catch((err) => console.log('Service Worker gagal:', err));
-            });
         }
     </script>
 

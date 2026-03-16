@@ -1,26 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Data menu aplikasi
     const services = [
-        { id: 'fun-game', title: 'Fun Game', color: 'bg-teal-500', icon: 'fa-gamepad', desc: 'Permainan ceria untuk motorik & kognitif.' },
-        { id: 'story-telling', title: 'Story Telling', color: 'bg-green-500', icon: 'fa-book-open', desc: 'Cerita ajaib yang menginspirasi imajinasi.' },
-        { id: 'membuat-komik', title: 'Membuat Komik', color: 'bg-yellow-400', icon: 'fa-pen-nib', desc: 'Bikin cerita gambar jadi lebih seru.' },
-        { id: 'sulap-tematik', title: 'Sulap Tematik', color: 'bg-purple-600', icon: 'fa-magic', desc: 'Belajar sulap hebat dan memukau.' },
-        { id: 'parenting', title: 'Parenting', color: 'bg-orange-500', icon: 'fa-heart', desc: 'Tips seru untuk Ayah Bunda.' },
-        { id: 'nobar-klip-3d', title: 'Nobar Klip 3D', color: 'bg-cyan-500', icon: 'fa-vr-cardboard', desc: 'Nonton film 3D yang seru banget.' },
-        { id: 'outbound', title: 'Outbound', color: 'bg-red-500', icon: 'fa-campground', desc: 'Petualangan seru di luar ruangan.' }
+        { id: 'fun-game', title: 'FUN GAME', icon: 'fa-gamepad', bg: 'bg_game.png' },
+        { id: 'story-telling', title: 'STORY TELLING', icon: 'fa-book-open', bg: 'bg_story.png' },
+        { id: 'membuat-komik', title: 'BUAT KOMIK', icon: 'fa-pen-nib', bg: 'bg_komik.png' },
+        { id: 'sulap-tematik', title: 'SULAP TEMATIK', icon: 'fa-magic', bg: 'bg_sulap.png' },
+        { id: 'nobar-klip-3d', title: 'NOBAR KLIP 3D', icon: 'fa-vr-cardboard', bg: 'bg_nobar.png' },
+        { id: 'parenting', title: 'PARENTING', icon: 'fa-heart', bg: 'bg_parenting.png' },
+        { id: 'outbound', title: 'OUTBOUND', icon: 'fa-campground', bg: 'bg_outbound.png' }
     ];
 
     const container = document.getElementById('menuContainer');
     if (container) {
         services.forEach(service => {
             container.innerHTML += `
-                <div class="${service.color} rounded-3xl p-5 text-white flex justify-between items-center shadow-lg">
-                    <div>
-                        <h3 class="font-bold text-lg">${service.title}</h3>
-                        <p class="text-xs opacity-80">${service.desc}</p>
+                <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" 
+                     style="background-image: url('assets/images/${service.bg}');">
+                    <div class="card-overlay"></div>
+                    <div class="card-content-wrapper">
+                        <h3 class="text-white text-xs">${service.title}</h3>
+                        <button class="mt-1 bg-white/20 text-white text-[10px] px-3 py-1 rounded-full btn-custom backdrop-blur-sm">
+                            <i class="fas ${service.icon} mr-1"></i> LIHAT
+                        </button>
                     </div>
-                    <i class="fas ${service.icon} text-3xl opacity-50"></i>
                 </div>
             `;
         });
+    }
+
+    // Registrasi Service Worker di sini agar terpusat
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then((reg) => console.log('SW terdaftar, scope:', reg.scope))
+            .catch((err) => console.log('SW gagal:', err));
     }
 });
