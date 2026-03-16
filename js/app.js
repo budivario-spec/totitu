@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const container = document.getElementById('menuContainer');
-
-    // Tambahkan pengecekan agar tidak error jika elemen tidak ada
     if (container) {
         services.forEach(service => {
             container.innerHTML += `
@@ -24,7 +22,5 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
         });
-    } else {
-        console.error("Elemen 'menuContainer' tidak ditemukan!");
     }
 });
