@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index === 0) {
                 // Kartu Pertama: Lebar Penuh (1 Kolom)
                 container.innerHTML += `
-                    <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5" 
-                         style="background-image: url('assets/images/${s.bg}');">
+                    <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4" 
+                         style="background-image: url('assets/images/${s.bg}'); background-size: cover; background-position: center;">
                         <div class="card-overlay"></div>
                         <div class="card-content-wrapper">
                             <h3 class="text-white text-md font-bold">${s.title}</h3>
@@ -27,15 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 `;
             } else {
-                // Kartu Sisanya: Grid 2 Kolom
-                // Kita buka row baru jika index ganjil (1, 3, 5)
-                if (index % 2 !== 0) {
-                    container.innerHTML += `<div class="grid grid-cols-2 gap-4">`;
+                // Untuk kartu sisanya (index 1 ke atas)
+                // Jika ini adalah kartu ganjil (1, 3, 5), buka row baru
+                if (index === 1 || (index - 1) % 2 === 0) {
+                    container.innerHTML += `<div class="grid grid-cols-2 gap-4 mb-4">`;
                 }
 
                 container.innerHTML += `
                     <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4" 
-                         style="background-image: url('assets/images/${s.bg}');">
+                         style="background-image: url('assets/images/${s.bg}'); background-size: cover; background-position: center;">
                         <div class="card-overlay"></div>
                         <div class="card-content-wrapper">
                             <h3 class="text-white text-xs font-bold">${s.title}</h3>
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 `;
 
-                // Tutup row jika index genap (2, 4, 6) atau item terakhir
+                // Tutup row jika kartu genap (2, 4, 6) atau item terakhir
                 if (index % 2 === 0 || index === services.length - 1) {
                     container.innerHTML += `</div>`;
                 }
