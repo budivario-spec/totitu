@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const services = [
-        { title: 'FUN GAME', icon: 'fa-gamepad', bg: 'bg_game.png' },      // Index 0
-        { title: 'STORY TELLING', icon: 'fa-book-open', bg: 'bg_story.png' }, // Index 1
-        { title: 'BUAT KOMIK', icon: 'fa-pen-nib', bg: 'bg_komik.png' },     // Index 2
-        { title: 'SULAP TEMATIK', icon: 'fa-magic', bg: 'bg_sulap.png' },     // Index 3
-        { title: 'NOBAR KLIP 3D', icon: 'fa-vr-cardboard', bg: 'bg_nobar.png' }, // Index 4
-        { title: 'PARENTING', icon: 'fa-heart', bg: 'bg_parenting.png' },    // Index 5
-        { title: 'OUTBOUND', icon: 'fa-campground', bg: 'bg_outbound.png' }  // Index 6
+        { title: 'FUN GAME', icon: 'fa-gamepad', bg: 'bg_game.png' },
+        { title: 'STORY TELLING', icon: 'fa-book-open', bg: 'bg_story.png' },
+        { title: 'BUAT KOMIK', icon: 'fa-pen-nib', bg: 'bg_komik.png' },
+        { title: 'SULAP TEMATIK', icon: 'fa-magic', bg: 'bg_sulap.png' },
+        { title: 'NOBAR KLIP 3D', icon: 'fa-vr-cardboard', bg: 'bg_nobar.png' },
+        { title: 'PARENTING', icon: 'fa-heart', bg: 'bg_parenting.png' },
+        { title: 'OUTBOUND', icon: 'fa-campground', bg: 'bg_outbound.png' }
     ];
 
     const container = document.getElementById('menuContainer');
@@ -43,5 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     gridHtml += '</div>';
     
-    container.innerHTML += gridHtml;
+    // Gunakan append untuk menambahkan gridHtml setelah kartu pertama
+    container.insertAdjacentHTML('beforeend', gridHtml);
 });
