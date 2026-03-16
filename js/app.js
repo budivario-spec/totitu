@@ -29,16 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('detailModal').classList.remove('hidden');
     };
 
+    // Fungsi untuk menutup modal dan mematikan suara video
     function closeModal() {
-    const modal = document.getElementById('detailModal');
-    const videoIframe = document.getElementById('modalVideo');
-    
-    // 1. Sembunyikan modal
-    modal.classList.add('hidden');
-    
-    // 2. Hentikan suara video dengan mengosongkan src
-    videoIframe.src = "";
-}
+        const modal = document.getElementById('detailModal');
+        const iframe = document.getElementById('modalVideo');
+        
+        if (modal) modal.classList.add('hidden');
+        if (iframe) iframe.src = ''; // Ini kunci untuk mematikan suara
+    }
 
     // Render Kartu Pertama
     container.innerHTML = `
