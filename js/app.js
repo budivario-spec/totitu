@@ -43,5 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     gridHtml += '</div>';
     
-    container.innerHTML += gridHtml;
+    if (container) {
+    container.insertAdjacentHTML('beforeend', htmlOutput);
+}
 });
