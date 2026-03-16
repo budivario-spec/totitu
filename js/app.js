@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('modalPrice').innerText = s.price;
         
         const waMsg = `Halo Admin, saya ingin memesan ${s.title}.%0ANama:%0AAlamat:%0APesan:%0A`;
-        document.getElementById('btnWA').href = `https://wa.me/628123456789?text=${waMsg}`;
+        document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=${waMsg}`;
         
         modal.classList.remove('hidden');
     };
