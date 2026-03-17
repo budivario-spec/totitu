@@ -285,3 +285,6 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             </div>
         </div>
     `;    }
+
+container.innerHTML = firstCardHtml + `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
+});
