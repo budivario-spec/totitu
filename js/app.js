@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                <br>Cara terbaik menanamkan karakter positif melalui kisah yang tak terlupakan.`, 
         duration: '90 Menit', 
         price: 'Rp 300.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/Li3ikGkjvvI' 
     },
     { 
         title: 'BUAT KOMIK', 
