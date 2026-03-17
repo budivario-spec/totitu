@@ -251,7 +251,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             <div class="relative z-10 w-full">
                 <button 
                     onclick="handleBtnVideo(event, 0)"
-                    class="w-full bg-white/20 text-white text-[10px] py-1,5 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">
+                    class="w-full bg-white/20 text-white text-[10px] py-2 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">
                     LIHAT VIDEO
                 </button>
             </div>
