@@ -45,13 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.classList.remove('hidden');
     };
 
-    // Render Kartu Pertama
+    // Contoh render kartu pertama
     container.innerHTML = `
-        <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 cursor-pointer" 
-             onclick="showDetail(0)" style="background-image: url('assets/images/${services[0].bg}');">
+        <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg" 
+             onclick="showDetail(0)" 
+             style="background-image: url('assets/images/${services[0].bg}');">
             <div class="card-overlay"></div>
-            <div class="card-content-wrapper z-10 pointer-events-none">
-                <h3 class="text-white text-lg font-bold text-shadow-bold">${services[0].title}</h3>
+            <div class="relative z-10 pointer-events-none"> <h3 class="text-white text-lg font-bold text-shadow-bold">${services[0].title}</h3>
                 <i class="fas ${services[0].icon} text-white text-3xl mt-1"></i>
             </div>
         </div>

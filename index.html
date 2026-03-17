@@ -67,6 +67,27 @@
             box-shadow: 0 8px 0 rgba(0,0,0,0.15);
         }
 
+        /* Efek saat kartu ditekan */
+        .card-interactive {
+            transition: transform 0.2s active, box-shadow 0.2s;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .card-interactive:active {
+            transform: scale(0.95) !important; /* Kartu sedikit mengecil saat ditekan */
+            filter: brightness(0.9); /* Sedikit menggelap agar terasa kliknya */
+        }
+
+        /* Memastikan elemen di dalam kartu tidak menghalangi klik */
+        .card-content-wrapper {
+            pointer-events: none; 
+        }
+
+        .card-interactive:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
         .hidden { display: none !important; }
     </style>
 </head>
