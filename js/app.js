@@ -234,37 +234,54 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
         }, 100);
     };
 
-    // Rendering
+    // Rendering Kartu Utama (Besar)
     const firstCardHtml = `
-        <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg cursor-pointer" 
+        <div class="card-image-base card-interactive h-48 flex flex-col justify-between p-6 mb-4 shadow-xl cursor-pointer" 
              onclick="openModal(0, 'desc')" 
-             style="background-image: url('assets/images/${services[0].bg}'); transition: transform 0.1s ease;">
-            <div class="card-overlay"></div>
-            <div class="relative z-10 pointer-events-none"> 
-                <h3 class="text-white text-lg font-bold text-shadow-bold">${services[0].title}</h3>
-                <i class="fas ${services[0].icon} text-white text-3xl mt-1"></i>
+             style="background-image: url('assets/images/${services[0].bg}');">
+            
+            <div class="absolute inset-0 bg-black/30 z-0"></div>
+
+            <div class="relative z-10">
+                <h3 class="text-white text-2xl font-bold text-shadow-bold uppercase tracking-wide">
+                    ${services[0].title}
+                </h3>
+                <p class="text-white/80 text-xs font-medium uppercase tracking-widest mt-1">Layanan Unggulan</p>
+            </div>
+
+            <div class="relative z-10">
+                <button 
+                    onclick="handleBtnVideo(event, 0)"
+                    class="w-full bg-white/20 text-white text-xs py-3 rounded-2xl backdrop-blur-md border border-white/40 shadow-lg font-bold uppercase active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-play-circle text-sm"></i> LIHAT VIDEO
+                </button>
             </div>
         </div>
     `;
 
+    // Rendering Kartu Grid (Kecil)
     let gridCardsHtml = '';
     for (let i = 1; i < services.length; i++) {
         const s = services[i];
-        gridCardsHtml += `
-            <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4 cursor-pointer" 
-                 onclick="openModal(${i}, 'desc')" 
-                 style="background-image: url('assets/images/${s.bg}'); transition: transform 0.2s ease;">
-                <div class="card-overlay"></div>
-                <div class="relative z-10">
-                    <h3 class="text-white text-[13px] font-bold text-shadow-bold pointer-events-none uppercase">${s.title}</h3>
-                    <button 
-                        onclick="handleBtnVideo(event, ${i})"
-                        class="mt-2 bg-white/20 text-white text-[11px] px-4 py-2 rounded-full backdrop-blur-sm border border-white/20 shadow-sm font-bold uppercase transition-transform duration-100 ease-out active:scale-90">
-                        LIHAT VIDEO
-                    </button>
-                </div>
+    gridCardsHtml += `
+        <div class="card-image-base card-interactive h-40 flex flex-col justify-between p-4 cursor-pointer" 
+             onclick="openModal(${i}, 'desc')" 
+             style="background-image: url('assets/images/${s.bg}');">
+            
+            <div class="absolute inset-0 bg-black/20 z-0"></div>
+
+            <div class="relative z-10">
+                <h3 class="text-white text-[12px] font-bold text-shadow-bold uppercase leading-tight">
+                    ${s.title}
+                </h3>
             </div>
-        `;
-    }
-    container.innerHTML = firstCardHtml + `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
-});
+
+            <div class="relative z-10 w-full">
+                <button 
+                    onclick="handleBtnVideo(event, ${i})"
+                    class="w-full bg-white/20 text-white text-[10px] py-2 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">
+                    LIHAT VIDEO
+                </button>
+            </div>
+        </div>
+    `;    }
