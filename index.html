@@ -180,16 +180,35 @@
             <i class="fas fa-times"></i>
         </button>
 
-        <div id="modalDescMode" class="hidden w-full h-full bg-white flex flex-col p-8 justify-center items-center text-center">
-            <h2 id="modalTitle" class="text-3xl font-black text-blue-600 mb-4 uppercase"></h2>
-            <div class="flex gap-6 mb-6 text-sm font-bold text-gray-400">
-                <span><i class="fas fa-clock mr-1 text-orange-500"></i> <span id="modalDuration"></span></span>
-                <span><i class="fas fa-tag mr-1 text-orange-500"></i> <span id="modalPrice"></span></span>
+        <div id="modalDescMode" class="hidden flex flex-col h-full">
+            <div class="px-6 pt-6 pb-2">
+                <h2 id="modalTitle" class="text-2xl font-bold text-gray-800 uppercase italic tracking-tighter"></h2>
+                <hr class="mt-2 border-gray-100">
             </div>
-            <p id="modalDesc" class="text-gray-600 leading-relaxed mb-8 text-left text-lg"></p>
-            <a id="btnWA" href="#" target="_blank" class="w-full max-w-xs bg-green-500 text-white py-4 rounded-2xl font-bold shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2">
-                <i class="fab fa-whatsapp text-xl"></i> PESAN SEKARANG
-            </a>
+
+            <div class="flex-grow overflow-y-auto px-6 py-2 custom-scroll">
+                <div id="modalDesc" class="text-gray-600 leading-relaxed text-sm text-left">
+                    </div>
+                
+                <div class="mt-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs text-gray-400 uppercase font-bold">Durasi</span>
+                        <span id="modalDuration" class="text-sm font-bold text-gray-700"></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-gray-400 uppercase font-bold">Investasi</span>
+                        <span id="modalPrice" class="text-sm font-bold text-green-600"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <a id="btnWA" href="#" target="_blank" 
+                   class="flex items-center justify-center gap-3 w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition-all">
+                    <i class="fab fa-whatsapp text-xl"></i>
+                    PESAN LAYANAN SEKARANG
+                </a>
+            </div>
         </div>
 
         <div id="modalVideoMode" class="hidden w-full h-full relative bg-black">
