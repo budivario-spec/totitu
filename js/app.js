@@ -34,44 +34,50 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!modal || !iframe) return;
 
         document.getElementById('modalTitle').innerText = s.title;
-        iframe.src = s.video; // Mengisi kembali link video saat dibuka
+        iframe.src = s.video; 
         document.getElementById('modalDesc').innerText = s.desc;
         document.getElementById('modalDuration').innerText = s.duration;
         document.getElementById('modalPrice').innerText = s.price;
         
-        const waMsg = `Assalamualaikum', saya ingin memesan ${s.title}.%0ANama: %0AAlamat: %0APesan: %0A`;
+        // Pesan WhatsApp diperbarui sesuai permintaan Anda
+        const waMsg = `Assalamualaikum, saya ingin memesan ${s.title}.%0ANama: %0AAlamat: %0APesan: %0A`;
         document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=${waMsg}`;
         
         modal.classList.remove('hidden');
     };
 
-    // Contoh render kartu pertama
-    container.innerHTML = `
-        <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg" 
+    // --- LOGIKA RENDER YANG DIPERBAIKI ---
+    
+    // 1. Siapkan HTML Kartu Pertama
+    const firstCardHtml = `
+        <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg cursor-pointer" 
              onclick="showDetail(0)" 
              style="background-image: url('assets/images/${services[0].bg}');">
             <div class="card-overlay"></div>
-            <div class="relative z-10 pointer-events-none"> <h3 class="text-white text-lg font-bold text-shadow-bold">${services[0].title}</h3>
+            <div class="relative z-10 pointer-events-none"> 
+                <h3 class="text-white text-lg font-bold text-shadow-bold">${services[0].title}</h3>
                 <i class="fas ${services[0].icon} text-white text-3xl mt-1"></i>
             </div>
         </div>
     `;
 
-    // Render Grid
-    let gridHtml = '<div class="grid grid-cols-2 gap-4">';
+    // 2. Siapkan HTML Grid untuk kartu sisanya
+    let gridCardsHtml = '';
     for (let i = 1; i < services.length; i++) {
         const s = services[i];
-        gridHtml += `
+        gridCardsHtml += `
             <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4 cursor-pointer" 
-                 onclick="showDetail(${i})" style="background-image: url('assets/images/${s.bg}');">
+                 onclick="showDetail(${i})" 
+                 style="background-image: url('assets/images/${s.bg}');">
                 <div class="card-overlay"></div>
-                <div class="card-content-wrapper z-10 pointer-events-none">
+                <div class="relative z-10 pointer-events-none">
                     <h3 class="text-white text-[10px] font-bold text-shadow-bold">${s.title}</h3>
-                    <button class="mt-1 bg-white/20 text-white text-[9px] px-3 py-1 rounded-full btn-custom backdrop-blur-sm border border-white/20">LIHAT</button>
+                    <button class="mt-1 bg-white/20 text-white text-[9px] px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">LIHAT</button>
                 </div>
             </div>
         `;
     }
-    gridHtml += '</div>';
-    container.insertAdjacentHTML('beforeend', gridHtml);
+
+    // 3. Masukkan ke DOM satu kali saja untuk menjaga stabilitas CSS
+    container.innerHTML = firstCardHtml + `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
 });

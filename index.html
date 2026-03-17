@@ -70,7 +70,9 @@
         /* Efek saat kartu ditekan */
         .card-interactive {
             transition: transform 0.2s active, box-shadow 0.2s;
+            -webkit-user-select: none; /* Mencegah seleksi teks di iOS */
             user-select: none;
+            touch-action: manipulation; /* Optimasi respon sentuhan di mobile */
             cursor: pointer;
         }
 
