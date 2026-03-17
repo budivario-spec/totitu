@@ -234,26 +234,25 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
         }, 100);
     };
 
-    // Rendering Kartu Utama (Besar)
+    // Rendering Kartu Utama (Besar) - Kembali ke Ukuran Semula, Teks Unggulan Dihapus
     const firstCardHtml = `
-        <div class="card-image-base card-interactive h-48 flex flex-col justify-between p-6 mb-4 shadow-xl cursor-pointer" 
+        <div class="card-image-base card-interactive h-40 flex flex-col justify-between p-4 mb-4 shadow-xl cursor-pointer" 
              onclick="openModal(0, 'desc')" 
              style="background-image: url('assets/images/${services[0].bg}');">
             
-            <div class="absolute inset-0 bg-black/30 z-0"></div>
+            <div class="absolute inset-0 bg-black/20 z-0"></div>
 
             <div class="relative z-10">
-                <h3 class="text-white text-2xl font-bold text-shadow-bold uppercase tracking-wide">
+                <h3 class="text-white text-[12px] font-bold text-shadow-bold uppercase tracking-wide">
                     ${services[0].title}
                 </h3>
-                <p class="text-white/80 text-xs font-medium uppercase tracking-widest mt-1">Layanan Unggulan</p>
             </div>
 
-            <div class="relative z-10">
+            <div class="relative z-10 w-full">
                 <button 
                     onclick="handleBtnVideo(event, 0)"
-                    class="w-full bg-white/20 text-white text-xs py-3 rounded-2xl backdrop-blur-md border border-white/40 shadow-lg font-bold uppercase active:scale-95 transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-play-circle text-sm"></i> LIHAT VIDEO
+                    class="w-full bg-white/20 text-white text-[10px] py-2 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">
+                    LIHAT VIDEO
                 </button>
             </div>
         </div>
@@ -264,7 +263,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
     for (let i = 1; i < services.length; i++) {
         const s = services[i];
     gridCardsHtml += `
-        <div class="card-image-base card-interactive h-40 flex flex-col justify-between p-4 cursor-pointer" 
+        <div class="card-image-base card-interactive h-30 flex flex-col justify-between p-4 cursor-pointer" 
              onclick="openModal(${i}, 'desc')" 
              style="background-image: url('assets/images/${s.bg}');">
             
