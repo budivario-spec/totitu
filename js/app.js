@@ -50,27 +50,47 @@ document.addEventListener("DOMContentLoaded", () => {
         window.showDetail(index);
     };
 
-    window.showDetail = (index) => {
+    // Fungsi untuk membuka modal (Mode 1: Deskripsi, Mode 2: Video)
+    window.openModal = (index, mode) => {
         const s = services[index];
         const modal = document.getElementById('detailModal');
         const iframe = document.getElementById('modalVideo');
+        const contentOverlay = document.getElementById('modalContentOverlay');
 
         if (!modal || !iframe) return;
 
+        // Isi data dasar
         document.getElementById('modalTitle').innerText = s.title;
-        
-        // Modifikasi URL untuk mode vertikal/Shorts agar autoplay & loop
-        const videoId = s.video.split('/').pop();
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=0&modestbranding=1`;
-
         document.getElementById('modalDesc').innerText = s.desc;
         document.getElementById('modalDuration').innerText = s.duration;
         document.getElementById('modalPrice').innerText = s.price;
         
         const waMsg = `Assalamualaikum, saya ingin memesan ${s.title}.%0ANama: %0Alamat: %0APesan: %0A`;
         document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=${waMsg}`;
+
+        if (mode === 'video') {
+            // MODE VIDEO: Tampilkan video, sembunyikan sebagian teks agar video terlihat
+            const videoId = s.video.split('/').pop();
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0`;
+            iframe.classList.remove('hidden');
+            contentOverlay.classList.add('bg-gradient-to-t', 'from-black', 'to-transparent');
+            contentOverlay.classList.remove('bg-white');
+            contentOverlay.classList.add('text-white');
+        } else {
+            // MODE DESKRIPSI: Sembunyikan video, fokus ke teks
+            iframe.src = '';
+            iframe.classList.add('hidden');
+            contentOverlay.classList.remove('bg-gradient-to-t', 'from-black', 'text-white');
+            contentOverlay.classList.add('bg-white', 'text-gray-800');
+        }
         
         modal.classList.remove('hidden');
+    };
+
+    // Fungsi klik khusus tombol LIHAT
+    window.handleBtnVideo = (e, index) => {
+        e.stopPropagation(); // Agar kartu tidak ikut tertekan
+        window.openModal(index, 'video');
     };
 
     // --- RENDER ---
