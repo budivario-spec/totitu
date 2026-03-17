@@ -25,22 +25,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('menuContainer');
     if (!container) return;
 
-    // --- LOGIKA TOUCH FEEDBACK TERPISAH ---
+    // --- LOGIKA TOUCH FEEDBACK YANG SUDAH DITUKAR ---
     container.addEventListener('touchstart', (e) => {
-        if (e.target.closest('button')) return; // Abaikan kartu jika tombol yang ditekan
+        // 1. Jika yang ditekan adalah area tombol, JANGAN gerakkan kartu
+        if (e.target.closest('button')) return;
+
+        // 2. Jika yang ditekan area kartu, buat kartu membal mantap (0.92)
         const card = e.target.closest('.card-interactive');
-        if (card) card.style.transform = 'scale(0.85)';
+        if (card) {
+            card.style.transform = 'scale(0.92)';
+            card.style.filter = 'brightness(0.9)'; // Memberi efek visual ditekan
+        }
     }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
         const card = e.target.closest('.card-interactive');
-        if (card) card.style.transform = 'scale(1)';
+        if (card) {
+            card.style.transform = 'scale(1)';
+            card.style.filter = 'brightness(1)';
+        }
     }, { passive: true });
 
     container.addEventListener('touchcancel', (e) => {
         const card = e.target.closest('.card-interactive');
-        if (card) card.style.transform = 'scale(1)';
+        if (card) {
+            card.style.transform = 'scale(1)';
+            card.style.filter = 'brightness(1)';
+        }
     }, { passive: true });
+
+    // Fungsi khusus tombol (Hanya tombol yang mengecil sedikit, kartu diam)
+    window.handleBtnVideo = (e, index) => {
+        e.stopPropagation();
+        
+        // Memberikan feedback visual instan pada tombol saja
+        const btn = e.target;
+        btn.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            btn.style.transform = 'scale(1)';
+            window.openModal(index, 'video');
+        }, 100);
+    };
 
     // Fungsi modal utama
     window.openModal = (index, mode) => {
@@ -108,8 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h3 class="text-white text-[13px] font-bold text-shadow-bold pointer-events-none uppercase">${s.title}</h3>
                     <button 
                         onclick="handleBtnVideo(event, ${i})"
-                        class="mt-2 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 transition-transform active:scale-90 shadow-sm font-bold">
-                        LIHAT VIDEO
+                        class="mt-2 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 shadow-sm font-bold"
+                        style="transition: transform 0.1s ease;"> LIHAT VIDEO
                     </button>
                 </div>
             </div>
