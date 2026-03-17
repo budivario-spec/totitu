@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
 meningkatkan kemampuan kognitif hingga 23% dan mempercepat waktu reaksi. Format ini juga merangsang imajinasi, memberikan hiburan visual yang lebih nyata, serta sering digunakan sebagai media pembelajaran yang interaktif dan menarik.`, 
         duration: '60 Menit', 
         price: 'Rp 300.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/J2Z5co3v3WA' 
     },
     { 
         title: 'PARENTING', 
