@@ -1,16 +1,75 @@
-// 1. PINDAHKAN KE LUAR agar bisa diakses oleh onclick di HTML
-window.closeModal = function() {
-    const modal = document.getElementById('detailModal');
-    const iframe = document.getElementById('modalVideo');
-    
-    if (modal) {
-        modal.classList.add('hidden');
+// 1. GLOBAL VARIABLES & YOUTUBE API
+let player;
+let progressInterval;
+
+// Fungsi ini HARUS di luar DOMContentLoaded agar dipanggil oleh YouTube SDK
+window.onYouTubeIframeAPIReady = function() {
+    player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        playerVars: {
+            'autoplay': 0,
+            'controls': 0,
+            'modestbranding': 1,
+            'rel': 0,
+            'showinfo': 0,
+            'iv_load_policy': 3,
+            'fs': 0
+        },
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+};
+
+function onPlayerStateChange(event) {
+    const playIcon = document.getElementById('playIcon');
+    if (event.data == YT.PlayerState.PLAYING) {
+        if (playIcon) playIcon.className = "fas fa-pause";
+        startTracking();
+    } else {
+        if (playIcon) playIcon.className = "fas fa-play";
+        clearInterval(progressInterval);
     }
-    if (iframe) {
-        iframe.src = ''; 
+}
+
+function startTracking() {
+    clearInterval(progressInterval);
+    progressInterval = setInterval(() => {
+        if (player && player.getDuration) {
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            if (duration > 0) {
+                const percent = (currentTime / duration) * 100;
+                document.getElementById('progressBar').style.width = percent + '%';
+                
+                const mins = Math.floor(currentTime / 60);
+                const secs = Math.floor(currentTime % 60);
+                document.getElementById('videoTime').innerText = 
+                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+        }
+    }, 500);
+}
+
+// Global Controls
+window.togglePlay = () => {
+    if (!player) return;
+    const state = player.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
+    } else {
+        player.playVideo();
     }
 };
 
+window.closeModal = function() {
+    document.getElementById('detailModal').classList.add('hidden');
+    if (player && player.stopVideo) player.stopVideo();
+    clearInterval(progressInterval);
+};
+
+// 2. MAIN LOGIC
 document.addEventListener("DOMContentLoaded", () => {
     const services = [
         { title: 'FUN GAME', icon: 'fa-gamepad', bg: 'bg_game.png', desc: 'Bermain game edukatif seru untuk melatih motorik.', duration: '60 Menit', price: 'Rp 50.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
@@ -25,10 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('menuContainer');
     if (!container) return;
 
-    // --- LOGIKA TOUCH FEEDBACK MANTAP ---
+    // Feedback Touch
     container.addEventListener('touchstart', (e) => {
         if (e.target.closest('button')) return;
-
         const card = e.target.closest('.card-interactive');
         if (card) {
             card.style.transform = 'scale(0.92)';
@@ -44,61 +102,46 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, { passive: true });
 
-    container.addEventListener('touchcancel', (e) => {
-        const card = e.target.closest('.card-interactive');
-        if (card) {
-            card.style.transform = 'scale(1)';
-            card.style.filter = 'brightness(1)';
-        }
-    }, { passive: true });
-
-    // --- FUNGSI MODAL & TOMBOL ---
-
-    // Fungsi modal utama
+    // Fungsi Buka Modal
     window.openModal = (index, mode) => {
         const s = services[index];
         const modal = document.getElementById('detailModal');
-        const iframe = document.getElementById('modalVideo');
-        const contentOverlay = document.getElementById('modalContentOverlay');
+        const descMode = document.getElementById('modalDescMode');
+        const videoMode = document.getElementById('modalVideoMode');
 
-        if (!modal || !iframe || !contentOverlay) return;
-
-        document.getElementById('modalTitle').innerText = s.title;
-        document.getElementById('modalDesc').innerText = s.desc;
-        document.getElementById('modalDuration').innerText = s.duration;
-        document.getElementById('modalPrice').innerText = s.price;
-        
-        const waMsg = `Assalamualaikum, saya ingin memesan ${s.title}.%0ANama: %0Alamat: %0APesan: %0A`;
-        document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=${waMsg}`;
+        modal.classList.remove('hidden');
 
         if (mode === 'video') {
+            descMode.classList.add('hidden');
+            videoMode.classList.remove('hidden');
             const videoId = s.video.split('/').pop();
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${videoId}`;
-            iframe.classList.remove('hidden');
-            contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-gradient-to-t from-black via-black/60 to-transparent text-white shadow-2xl";
+            if (player && player.loadVideoById) {
+                player.loadVideoById(videoId);
+            }
         } else {
-            iframe.src = '';
-            iframe.classList.add('hidden');
-            contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-white text-gray-800";
+            videoMode.classList.add('hidden');
+            descMode.classList.remove('hidden');
+            if (player && player.stopVideo) player.stopVideo();
+            
+            document.getElementById('modalTitle').innerText = s.title;
+            document.getElementById('modalDesc').innerText = s.desc;
+            document.getElementById('modalDuration').innerText = s.duration;
+            document.getElementById('modalPrice').innerText = s.price;
+            document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=Halo Totitu, saya mau pesan ${s.title}`;
         }
-        
-        modal.classList.remove('hidden');
     };
 
-    // Fungsi tombol LIHAT VIDEO (Aksi tunggal)
     window.handleBtnVideo = (e, index) => {
-        e.stopPropagation(); 
-        
-        const btn = e.currentTarget; // Pakai currentTarget agar lebih akurat ke elemen button
+        e.stopPropagation();
+        const btn = e.currentTarget;
         btn.style.transform = 'scale(0.9)';
-        
         setTimeout(() => {
             btn.style.transform = 'scale(1)';
             window.openModal(index, 'video');
         }, 100);
     };
 
-    // --- RENDER ---
+    // Rendering
     const firstCardHtml = `
         <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg cursor-pointer" 
              onclick="openModal(0, 'desc')" 
@@ -130,6 +173,5 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
     }
-
     container.innerHTML = firstCardHtml + `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
 });
