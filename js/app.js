@@ -236,7 +236,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
 
     // Rendering Kartu Utama (Besar) - Kembali ke Ukuran Semula, Teks Unggulan Dihapus
     const firstCardHtml = `
-        <div class="card-image-base card-interactive h-30 flex flex-col justify-between p-4 mb-4 shadow-xl cursor-pointer" 
+        <div class="card-image-base card-interactive h-40 flex flex-col justify-between p-4 mb-4 shadow-xl cursor-pointer" 
              onclick="openModal(0, 'desc')" 
              style="background-image: url('assets/images/${services[0].bg}');">
             
@@ -263,7 +263,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
     for (let i = 1; i < services.length; i++) {
         const s = services[i];
     gridCardsHtml += `
-        <div class="card-image-base card-interactive h-35 flex flex-col justify-between p-4 cursor-pointer" 
+        <div class="card-image-base card-interactive h-40 flex flex-col justify-between p-4 cursor-pointer" 
              onclick="openModal(${i}, 'desc')" 
              style="background-image: url('assets/images/${s.bg}');">
             
