@@ -72,14 +72,59 @@ window.closeModal = function() {
 // 2. MAIN LOGIC
 document.addEventListener("DOMContentLoaded", () => {
     const services = [
-        { title: 'FUN GAME', icon: 'fa-gamepad', bg: 'bg_game.png', desc: 'Bermain game edukatif seru untuk melatih motorik.', duration: '60 Menit', price: 'Rp 50.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { title: 'STORY TELLING', icon: 'fa-book-open', bg: 'bg_story.png', desc: 'Mendengar dongeng imajinatif yang penuh pesan moral.', duration: '90 Menit', price: 'Rp 300.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { title: 'BUAT KOMIK', icon: 'fa-pen-nib', bg: 'bg_komik.png', desc: 'Belajar menggambar dan membuat alur cerita komik.', duration: '90 Menit', price: 'Rp 400.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { title: 'SULAP TEMATIK', icon: 'fa-magic', bg: 'bg_sulap.png', desc: 'Pertunjukan sulap interaktif yang memukau anak-anak.', duration: '30 Menit', price: 'Rp 200.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { title: 'NOBAR KLIP 3D', icon: 'fa-vr-cardboard', bg: 'bg_nobar.png', desc: 'Menonton klip edukasi 3D dengan pengalaman visual unik.', duration: '60 Menit', price: 'Rp 40.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-        { title: 'PARENTING', icon: 'fa-heart', bg: 'bg_parenting.png', desc: 'Sesi konsultasi untuk gaya pengasuhan yang positif.', duration: '90 Menit', price: 'Rp 150.000', video: 'https://www.youtube.com/embed/iOSSCqybm3U' },
-        { title: 'OUTBOUND', icon: 'fa-campground', bg: 'bg_outbound.png', desc: 'Petualangan seru di luar ruangan untuk kerjasama tim.', duration: '180 Menit', price: 'Rp 500.000', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
-    ];
+    { 
+        title: 'FUN GAME', 
+        icon: 'fa-gamepad', 
+        bg: 'bg_game.png', 
+        desc: `Permainan yang dirancang khusus untuk menciptakan suasana santai, lucu, dan menyenangkan. Fokus utamanya adalah rekreasi dan hiburan, bukan kompetisi berat.
+               <br><br>
+               <b>Poin Penting:</b>
+               <ul class="text-left list-disc ml-5 mt-2 space-y-1">
+                  <li><b>Tujuan:</b> Menghibur, melepas stres, dan membangun kebersamaan.</li>
+                  <li><b>Karakteristik:</b> Ringan, mudah dipahami, dan penuh humor.</li>
+                  <li><b>Contoh:</b> Ice breaking, lomba estafet, dan aktivitas outdoor.</li>
+               </ul>
+               <br>Cocok untuk gathering, outbound, atau ulang tahun agar suasana semakin akrab!`, 
+        duration: '60 Menit', 
+        price: 'Rp 50.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    },
+    { 
+        title: 'STORY TELLING', 
+        icon: 'fa-book-open', 
+        bg: 'bg_story.png', 
+        desc: `Menghidupkan imajinasi anak melalui dongeng interaktif yang kaya akan pesan moral dan nilai-nilai kebaikan.
+               <br><br>
+               <b>Kenapa Story Telling?</b>
+               <ul class="text-left list-disc ml-5 mt-2 space-y-1">
+                  <li><b>Interaktif:</b> Anak-anak terlibat langsung dalam alur cerita.</li>
+                  <li><b>Media:</b> Menggunakan boneka tangan atau buku cerita menarik.</li>
+                  <li><b>Manfaat:</b> Melatih fokus, empati, dan kemampuan berbahasa.</li>
+               </ul>
+               <br>Cara terbaik menanamkan karakter positif melalui kisah yang tak terlupakan.`, 
+        duration: '90 Menit', 
+        price: 'Rp 300.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    },
+    { 
+        title: 'SULAP TEMATIK', 
+        icon: 'fa-magic', 
+        bg: 'bg_sulap.png', 
+        desc: `Pertunjukan sulap yang dibungkus dengan tema tertentu (misal: edukasi, kebersihan, atau kejujuran) sehingga tidak hanya memukau tapi juga memberi pelajaran.
+               <br><br>
+               <b>Keunggulan:</b>
+               <ul class="text-left list-disc ml-5 mt-2 space-y-1">
+                  <li><b>Visual:</b> Trik-trik warna-warni yang disukai anak.</li>
+                  <li><b>Keterlibatan:</b> Penonton diajak naik ke panggung menjadi asisten pesulap.</li>
+                  <li><b>Edukasi:</b> Di balik setiap trik, ada pesan moral yang disampaikan.</li>
+               </ul>
+               <br>Momen ajaib yang akan selalu diingat oleh si kecil!`, 
+        duration: '30 Menit', 
+        price: 'Rp 200.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    }
+    // Tambahkan layanan lainnya dengan pola yang sama...
+];
 
     const container = document.getElementById('menuContainer');
     if (!container) return;
@@ -124,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (player && player.stopVideo) player.stopVideo();
             
             document.getElementById('modalTitle').innerText = s.title;
-            document.getElementById('modalDesc').innerText = s.desc;
+            document.getElementById('modalDesc').innerHTML = s.desc;
             document.getElementById('modalDuration').innerText = s.duration;
             document.getElementById('modalPrice').innerText = s.price;
             document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=Halo Totitu, saya mau pesan ${s.title}`;
