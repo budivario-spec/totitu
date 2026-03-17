@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                </ul>
                <br>Cocok untuk gathering, outbound, atau ulang tahun agar suasana semakin akrab!`, 
         duration: '60 Menit', 
-        price: 'Rp 50.000', 
+        price: 'Rp 500.000', 
         video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
     },
     { 
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
                </ul>
                <br>Cara terbaik menanamkan karakter positif melalui kisah yang tak terlupakan.`, 
         duration: '90 Menit', 
-        price: 'Rp 300.000', 
+        price: 'Rp 500.000', 
         video: 'https://www.youtube.com/embed/Li3ikGkjvvI' 
     },
     { 
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
         desc: `Istilah "komik" sebenarnya berasal dari Bahasa Yunani, yaitu "komikos" yang dapat diartikan sebagai hiburan atau kesenangan. Meskipun ada hubungan dengan komedi, komik tidak hanya membahas hal-hal lucu saja.
                <br><br>
                Komik adalah seni yang menggabungkan gambar dan teks dalam urutan tertentu. Fungsi komik yaitu sebagai medium informasi dan menciptakan pengalaman estetis bagi pembacanya.`, 
-        duration: '90 Menit', 
+        duration: '60 Menit', 
         price: 'Rp 400.000', 
         video: 'https://www.youtube.com/embed/0-SFMGhHhwc' 
     },
@@ -130,8 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   <li><b>Edukasi:</b> Di balik setiap trik, ada pesan moral yang disampaikan.</li>
                </ul>
                <br>Momen ajaib yang akan selalu diingat oleh si kecil!`, 
-        duration: '30 Menit', 
-        price: 'Rp 200.000', 
+        duration: '60 Menit', 
+        price: 'Rp 400.000', 
         video: 'https://www.youtube.com/embed/L4csWRh28No' 
     },
     { 
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bg: 'bg_nobar.png', 
         desc: `Film 3D menawarkan pengalaman menonton yang lebih imersif dan mendalam, sekaligus memberikan manfaat kesehatan otak seperti
 meningkatkan kemampuan kognitif hingga 23% dan mempercepat waktu reaksi. Format ini juga merangsang imajinasi, memberikan hiburan visual yang lebih nyata, serta sering digunakan sebagai media pembelajaran yang interaktif dan menarik.`, 
-        duration: '90 Menit', 
+        duration: '60 Menit', 
         price: 'Rp 300.000', 
         video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
     },
@@ -150,8 +150,8 @@ meningkatkan kemampuan kognitif hingga 23% dan mempercepat waktu reaksi. Format 
         bg: 'bg_parenting.png', 
         desc: `Parenting adalah
 proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan sosial dari lahir hingga dewasa. Intinya bukan menjadi orang tua sempurna, melainkan mau terus belajar, beradaptasi dengan perkembangan anak, serta membangun ikatan emosional yang sehat agar anak mandiri, percaya diri, dan berkarakter.`, 
-        duration: '30 Menit', 
-        price: 'Rp 200.000', 
+        duration: '90 Menit', 
+        price: 'Rp 500.000', 
         video: 'https://www.youtube.com/embed/8eNYIQ68ucA' 
     },
     { 
@@ -169,7 +169,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
                </ul>
                <br>Outbound sering digunakan oleh perusahaan untuk gathering atau pelatihan karyawan agar lebih adaptif dan kolaboratif.`, 
         duration: '60 Menit', 
-        price: 'Rp 50.000', 
+        price: 'Rp 500.000', 
         video: 'https://www.youtube.com/embed/DGFoHV88z2I' 
     },
 ];
