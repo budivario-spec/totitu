@@ -107,6 +107,17 @@ document.addEventListener("DOMContentLoaded", () => {
         video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
     },
     { 
+        title: 'BUAT KOMIK', 
+        icon: 'fa-pen-nib', 
+        bg: 'bg_komik.png', 
+        desc: `Istilah "komik" sebenarnya berasal dari Bahasa Yunani, yaitu "komikos" yang dapat diartikan sebagai hiburan atau kesenangan. Meskipun ada hubungan dengan komedi, komik tidak hanya membahas hal-hal lucu saja.
+               <br><br>
+               Komik adalah seni yang menggabungkan gambar dan teks dalam urutan tertentu. Fungsi komik yaitu sebagai medium informasi dan menciptakan pengalaman estetis bagi pembacanya.`, 
+        duration: '90 Menit', 
+        price: 'Rp 400.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    },
+    { 
         title: 'SULAP TEMATIK', 
         icon: 'fa-magic', 
         bg: 'bg_sulap.png', 
@@ -122,8 +133,45 @@ document.addEventListener("DOMContentLoaded", () => {
         duration: '30 Menit', 
         price: 'Rp 200.000', 
         video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
-    }
-    // Tambahkan layanan lainnya dengan pola yang sama...
+    },
+    { 
+        title: 'NOBAR KLIP 3D', 
+        icon: 'fa-book-open', 
+        bg: 'bg_nobar.png', 
+        desc: `Film 3D menawarkan pengalaman menonton yang lebih imersif dan mendalam, sekaligus memberikan manfaat kesehatan otak seperti
+meningkatkan kemampuan kognitif hingga 23% dan mempercepat waktu reaksi. Format ini juga merangsang imajinasi, memberikan hiburan visual yang lebih nyata, serta sering digunakan sebagai media pembelajaran yang interaktif dan menarik.`, 
+        duration: '90 Menit', 
+        price: 'Rp 300.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    },
+    { 
+        title: 'PARENTING', 
+        icon: 'fa-magic', 
+        bg: 'bg_parenting.png', 
+        desc: `Parenting adalah
+proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan sosial dari lahir hingga dewasa. Intinya bukan menjadi orang tua sempurna, melainkan mau terus belajar, beradaptasi dengan perkembangan anak, serta membangun ikatan emosional yang sehat agar anak mandiri, percaya diri, dan berkarakter.`, 
+        duration: '30 Menit', 
+        price: 'Rp 200.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    },
+    { 
+        title: 'OUTBOUND', 
+        icon: 'fa-gamepad', 
+        bg: 'bg_outbound.png', 
+        desc: `Outbound adalah serangkaian kegiatan pembelajaran di luar ruangan (outdoor) yang memanfaatkan permainan edukatif, simulasi fisik, dan mental untuk pengembangan diri, tim, dan kepemimpinan. Aktivitas ini bertujuan meningkatkan kerjasama, komunikasi, kepercayaan diri, dan pemecahan masalah melalui experiential learning di alam terbuka.
+               <br><br>
+               <b>Berikut adalah poin-poin penting mengenai outbound:</b>
+               <ul class="text-left list-disc ml-5 mt-2 space-y-1">
+                  <li><b>Tujuan utama:</b> Meningkatkan kekompakan tim (team building), penyegaran (refreshing), pengembangan karakter, dan kepemimpinan.</li>
+                  <li><b>Contoh kegiatan:</b> Rafting (arung jeram), paintball, panjat tebing, fun games, offroad, dan team building games.</li>
+                  <li><b>Lokasi populer:</b> Area terbuka seperti pegunungan, pantai, hutan, atau kawasan resort dan camping ground.</li>
+                  <li><b>Manfaat:</b> Meningkatkan keterampilan sosial, membangun pola pikir kreatif, serta memperkuat kecerdasan emosional dan spiritual.</li>
+               </ul>
+               <br>Outbound sering digunakan oleh perusahaan untuk gathering atau pelatihan karyawan agar lebih adaptif dan kolaboratif.`, 
+        duration: '60 Menit', 
+        price: 'Rp 50.000', 
+        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+    },
 ];
 
     const container = document.getElementById('menuContainer');
