@@ -25,16 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('menuContainer');
     if (!container) return;
 
-    // --- LOGIKA TOUCH FEEDBACK YANG SUDAH DITUKAR ---
+    // --- LOGIKA TOUCH FEEDBACK MANTAP ---
     container.addEventListener('touchstart', (e) => {
-        // 1. Jika yang ditekan adalah area tombol, JANGAN gerakkan kartu
         if (e.target.closest('button')) return;
 
-        // 2. Jika yang ditekan area kartu, buat kartu membal mantap (0.92)
         const card = e.target.closest('.card-interactive');
         if (card) {
             card.style.transform = 'scale(0.92)';
-            card.style.filter = 'brightness(0.9)'; // Memberi efek visual ditekan
+            card.style.filter = 'brightness(0.9)';
         }
     }, { passive: true });
 
@@ -54,19 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, { passive: true });
 
-    // Fungsi khusus tombol (Hanya tombol yang mengecil sedikit, kartu diam)
-    window.handleBtnVideo = (e, index) => {
-        e.stopPropagation();
-        
-        // Memberikan feedback visual instan pada tombol saja
-        const btn = e.target;
-        btn.style.transform = 'scale(0.9)';
-        
-        setTimeout(() => {
-            btn.style.transform = 'scale(1)';
-            window.openModal(index, 'video');
-        }, 100);
-    };
+    // --- FUNGSI MODAL & TOMBOL ---
 
     // Fungsi modal utama
     window.openModal = (index, mode) => {
@@ -89,26 +75,30 @@ document.addEventListener("DOMContentLoaded", () => {
             const videoId = s.video.split('/').pop();
             iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${videoId}`;
             iframe.classList.remove('hidden');
-            // Warna Overlay untuk Video (Gelap)
-            contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-gradient-to-t from-black via-black/60 to-transparent text-white";
+            contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-gradient-to-t from-black via-black/60 to-transparent text-white shadow-2xl";
         } else {
             iframe.src = '';
             iframe.classList.add('hidden');
-            // Warna Overlay untuk Deskripsi (Putih Bersih)
             contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-white text-gray-800";
         }
         
         modal.classList.remove('hidden');
     };
 
+    // Fungsi tombol LIHAT VIDEO (Aksi tunggal)
     window.handleBtnVideo = (e, index) => {
         e.stopPropagation(); 
-        window.openModal(index, 'video');
+        
+        const btn = e.currentTarget; // Pakai currentTarget agar lebih akurat ke elemen button
+        btn.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            btn.style.transform = 'scale(1)';
+            window.openModal(index, 'video');
+        }, 100);
     };
 
     // --- RENDER ---
-    
-    // 1. Kartu Pertama (Disesuaikan agar panggil openModal)
     const firstCardHtml = `
         <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg cursor-pointer" 
              onclick="openModal(0, 'desc')" 
@@ -121,7 +111,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
 
-    // 2. Kartu Grid (Sudah Benar)
     let gridCardsHtml = '';
     for (let i = 1; i < services.length; i++) {
         const s = services[i];
@@ -134,8 +123,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h3 class="text-white text-[13px] font-bold text-shadow-bold pointer-events-none uppercase">${s.title}</h3>
                     <button 
                         onclick="handleBtnVideo(event, ${i})"
-                        class="mt-2 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 shadow-sm font-bold"
-                        style="transition: transform 0.1s ease;"> LIHAT VIDEO
+                        class="mt-2 bg-white/20 text-white text-[11px] px-4 py-2 rounded-full backdrop-blur-sm border border-white/20 shadow-sm font-bold uppercase transition-transform duration-100 ease-out active:scale-90">
+                        LIHAT VIDEO
                     </button>
                 </div>
             </div>
