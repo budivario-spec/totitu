@@ -27,9 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- LOGIKA TOUCH FEEDBACK TERPISAH ---
     container.addEventListener('touchstart', (e) => {
-        // Jika yang disentuh adalah tombol, kartu JANGAN mengecil
-        if (e.target.closest('button')) return;
-
+        if (e.target.closest('button')) return; // Abaikan kartu jika tombol yang ditekan
         const card = e.target.closest('.card-interactive');
         if (card) card.style.transform = 'scale(0.85)';
     }, { passive: true });
@@ -44,22 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (card) card.style.transform = 'scale(1)';
     }, { passive: true });
 
-    // Fungsi klik khusus tombol agar kartu tidak ikut bereaksi
-    window.handleBtnClick = (e, index) => {
-        e.stopPropagation(); // Stop klik merambat ke kartu
-        window.showDetail(index);
-    };
-
-    // Fungsi untuk membuka modal (Mode 1: Deskripsi, Mode 2: Video)
+    // Fungsi modal utama
     window.openModal = (index, mode) => {
         const s = services[index];
         const modal = document.getElementById('detailModal');
         const iframe = document.getElementById('modalVideo');
         const contentOverlay = document.getElementById('modalContentOverlay');
 
-        if (!modal || !iframe) return;
+        if (!modal || !iframe || !contentOverlay) return;
 
-        // Isi data dasar
         document.getElementById('modalTitle').innerText = s.title;
         document.getElementById('modalDesc').innerText = s.desc;
         document.getElementById('modalDuration').innerText = s.duration;
@@ -69,34 +60,32 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=${waMsg}`;
 
         if (mode === 'video') {
-            // MODE VIDEO: Tampilkan video, sembunyikan sebagian teks agar video terlihat
             const videoId = s.video.split('/').pop();
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0`;
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${videoId}`;
             iframe.classList.remove('hidden');
-            contentOverlay.classList.add('bg-gradient-to-t', 'from-black', 'to-transparent');
-            contentOverlay.classList.remove('bg-white');
-            contentOverlay.classList.add('text-white');
+            // Warna Overlay untuk Video (Gelap)
+            contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-gradient-to-t from-black via-black/60 to-transparent text-white";
         } else {
-            // MODE DESKRIPSI: Sembunyikan video, fokus ke teks
             iframe.src = '';
             iframe.classList.add('hidden');
-            contentOverlay.classList.remove('bg-gradient-to-t', 'from-black', 'text-white');
-            contentOverlay.classList.add('bg-white', 'text-gray-800');
+            // Warna Overlay untuk Deskripsi (Putih Bersih)
+            contentOverlay.className = "absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%] bg-white text-gray-800";
         }
         
         modal.classList.remove('hidden');
     };
 
-    // Fungsi klik khusus tombol LIHAT
     window.handleBtnVideo = (e, index) => {
-        e.stopPropagation(); // Agar kartu tidak ikut tertekan
+        e.stopPropagation(); 
         window.openModal(index, 'video');
     };
 
     // --- RENDER ---
+    
+    // 1. Kartu Pertama (Disesuaikan agar panggil openModal)
     const firstCardHtml = `
         <div class="card-image-base card-interactive h-32 flex flex-col justify-center p-5 mb-4 shadow-lg cursor-pointer" 
-             onclick="showDetail(0)" 
+             onclick="openModal(0, 'desc')" 
              style="background-image: url('assets/images/${services[0].bg}'); transition: transform 0.1s ease;">
             <div class="card-overlay"></div>
             <div class="relative z-10 pointer-events-none"> 
@@ -106,20 +95,21 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
     `;
 
+    // 2. Kartu Grid (Sudah Benar)
     let gridCardsHtml = '';
     for (let i = 1; i < services.length; i++) {
         const s = services[i];
         gridCardsHtml += `
             <div class="card-image-base card-interactive h-32 flex flex-col justify-end p-4 cursor-pointer" 
-                 onclick="showDetail(${i})" 
+                 onclick="openModal(${i}, 'desc')" 
                  style="background-image: url('assets/images/${s.bg}'); transition: transform 0.2s ease;">
                 <div class="card-overlay"></div>
                 <div class="relative z-10">
                     <h3 class="text-white text-[13px] font-bold text-shadow-bold pointer-events-none uppercase">${s.title}</h3>
                     <button 
-                        onclick="handleBtnClick(event, ${i})"
-                        class="mt-2 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 transition-transform active:scale-90 shadow-sm">
-                        LIHAT
+                        onclick="handleBtnVideo(event, ${i})"
+                        class="mt-2 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 transition-transform active:scale-90 shadow-sm font-bold">
+                        LIHAT VIDEO
                     </button>
                 </div>
             </div>

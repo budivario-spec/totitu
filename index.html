@@ -53,52 +53,35 @@
             color: #f97316 !important;
         }
 
-        /* Update pada .card-image-base di index.html */
         .card-image-base {
             position: relative;
-            /* Ini kunci agar gambar mengisi seluruh area kartu */
             background-size: cover !important; 
             background-position: center !important;
             background-repeat: no-repeat !important;
-            
             border-radius: 1.5rem;
             overflow: hidden;
             border: 4px solid white;
             box-shadow: 0 8px 0 rgba(0,0,0,0.15);
         }
 
-        /* Efek saat kartu ditekan */
         .card-interactive {
             transition: transform 0.1s ease-out;
-            /* Mencegah highlight biru bawaan browser saat diklik */
             -webkit-tap-highlight-color: transparent; 
-            /* Memberitahu browser untuk menangani manipulasi sentuhan dengan cepat */
             touch-action: manipulation; 
             user-select: none;
             -webkit-user-select: none;
         }
 
         .card-interactive:active {
-            transform: scale(0.95) !important; /* Kartu sedikit mengecil saat ditekan */
-            filter: brightness(0.9); /* Sedikit menggelap agar terasa kliknya */
+            transform: scale(0.95) !important; 
+            filter: brightness(0.9);
         }
 
-        /* Memastikan elemen di dalam kartu tidak menghalangi klik */
-        .card-content-wrapper {
-            pointer-events: none; 
-        }
-
-        .card-interactive:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        /* Pastikan video menutupi seluruh area tanpa distorsi */
         #modalVideo {
             pointer-events: auto;
-            object-fit: cover; /* Untuk video HTML5 biasa */
+            object-fit: cover;
         }
 
-        /* Animasi muncul modal dari bawah */
         #detailModal:not(.hidden) > div {
             animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -108,7 +91,6 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Membatasi teks deskripsi agar tidak menutupi seluruh layar */
         .line-clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -117,20 +99,22 @@
         }
 
         .hidden { display: none !important; }
+        
+        /* Transition halus untuk perubahan warna overlay */
+        #modalContentOverlay {
+            transition: all 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body>
 
     <div class="page-container">
-        
         <div id="page-home" class="page-content space-y-4">
             <header class="text-center mb-6 text-white text-shadow-bold">
                 <h1 class="text-3xl drop-shadow-md">TOTITU</h1>
                 <p class="text-sm drop-shadow-md opacity-90">BERMAIN & BELAJAR!</p>
             </header>
-
-            <main id="menuContainer" class="space-y-4">
-                </main>
+            <main id="menuContainer" class="space-y-4"></main>
         </div>
 
         <div id="page-testimoni" class="page-content hidden space-y-6">
@@ -138,10 +122,6 @@
             <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-pink-500 card-interactive">
                 <p class="text-gray-700 italic text-sm">"Totitu bikin anak saya jadi suka bikin cerita sendiri. Fitur komiknya juara banget!"</p>
                 <span class="block mt-2 font-bold text-xs text-pink-600">- Bunda Shinta, Jakarta</span>
-            </div>
-            <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-yellow-500 card-interactive">
-                <p class="text-gray-700 italic text-sm">"Fun Game-nya seru dan edukatif. Sangat membantu kegiatan akhir pekan kami!"</p>
-                <span class="block mt-2 font-bold text-xs text-yellow-600">- Pak Budi, Bandung</span>
             </div>
         </div>
 
@@ -151,22 +131,16 @@
                     <img src="assets/images/logo_totitu.png" alt="Logo Totitu" class="w-full h-full object-contain">
                 </div>
                 <h2 class="text-xl font-black text-blue-600 mb-2">TENTANG TOTITU</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    Kami adalah wadah kreatifitas yang percaya bahwa setiap anak memiliki bakat luar biasa melalui media digital yang aman.
-                </p>
-                <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
-                    <div class="bg-blue-50 p-3 rounded-2xl text-blue-700">Aman Bagi Anak</div>
-                    <div class="bg-green-50 p-3 rounded-2xl text-green-700">Konten Edukatif</div>
-                </div>
+                <p class="text-gray-600 text-sm leading-relaxed mb-6">Kami adalah wadah kreatifitas digital yang aman bagi anak.</p>
             </div>
         </div>
-</div>
+    </div>
 
     <div id="popup-search" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center p-6">
         <div class="bg-white w-full max-w-xs rounded-3xl p-6 shadow-2xl">
             <h3 class="text-lg text-center mb-4 text-gray-800">Cari Materi</h3>
             <input type="text" class="w-full border-2 border-orange-100 rounded-full px-4 py-2 mb-4 focus:outline-none" placeholder="Ketik di sini...">
-            <button onclick="closeModal()" class="w-full text-gray-400 py-2">TUTUP</button>
+            <button onclick="toggleSearch()" class="w-full text-gray-400 py-2">TUTUP</button>
         </div>
     </div>
 
@@ -185,6 +159,34 @@
         </a>
     </nav>
 
+    <div id="detailModal" class="fixed inset-0 z-[100] hidden bg-black/90 flex justify-center items-center p-4">
+        <div class="relative bg-white rounded-3xl overflow-hidden w-full max-w-[400px] h-[85vh] flex flex-col">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-50 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="relative w-full h-full bg-black flex flex-col">
+                <iframe id="modalVideo" class="absolute inset-0 w-full h-full hidden" 
+                    src="" frameborder="0" 
+                    allow="autoplay; encrypted-media">
+                </iframe>
+                
+                <div id="modalContentOverlay" class="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end min-h-[40%]">
+                    <h2 id="modalTitle" class="text-2xl font-bold mb-2 uppercase"></h2>
+                    <div class="flex gap-4 text-xs mb-4 font-bold">
+                        <span><i class="fas fa-clock mr-1"></i> <span id="modalDuration"></span></span>
+                        <span><i class="fas fa-tag mr-1"></i> <span id="modalPrice"></span></span>
+                    </div>
+                    <p id="modalDesc" class="text-sm leading-relaxed mb-6 line-clamp-3"></p>
+                    
+                    <a id="btnWA" href="#" target="_blank" class="block w-full bg-green-500 hover:bg-green-600 text-white text-center py-3 rounded-2xl font-bold transition-all active:scale-95 shadow-lg">
+                        <i class="fab fa-whatsapp mr-2 text-lg"></i> PESAN SEKARANG
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showPage(pageId, element) {
             document.querySelectorAll('.page-content').forEach(page => page.classList.add('hidden'));
@@ -197,30 +199,6 @@
             document.getElementById('popup-search').classList.toggle('hidden');
         }
     </script>
-
     <script src="./js/app.js"></script>
-
-    <div id="detailModal" class="fixed inset-0 z-[100] hidden bg-black/90 flex justify-center items-center p-4">
-        <div class="relative bg-white rounded-3xl overflow-hidden w-full max-w-[400px] h-[80vh] flex flex-col">
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-50 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <iframe id="modalVideo" class="w-full h-full object-cover hidden" src="" frameborder="0" allow="autoplay"></iframe>
-            
-            <div id="modalContentOverlay" class="absolute bottom-0 left-0 right-0 p-6 transition-colors duration-300">
-                <h2 id="modalTitle" class="text-2xl font-bold mb-2"></h2>
-                <div class="flex gap-4 text-xs mb-3">
-                    <span><i class="fas fa-clock mr-1"></i> <span id="modalDuration"></span></span>
-                    <span><i class="fas fa-tag mr-1"></i> <span id="modalPrice"></span></span>
-                </div>
-                <p id="modalDesc" class="text-sm leading-relaxed mb-6"></p>
-                <a id="btnWA" href="#" target="_blank" class="block w-full bg-green-500 text-white text-center py-3 rounded-2xl font-bold active:scale-95 shadow-lg">
-                    HUBUNGI ADMIN
-                </a>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
