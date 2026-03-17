@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
                Komik adalah seni yang menggabungkan gambar dan teks dalam urutan tertentu. Fungsi komik yaitu sebagai medium informasi dan menciptakan pengalaman estetis bagi pembacanya.`, 
         duration: '90 Menit', 
         price: 'Rp 400.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/0-SFMGhHhwc' 
     },
     { 
         title: 'SULAP TEMATIK', 
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
                <br>Momen ajaib yang akan selalu diingat oleh si kecil!`, 
         duration: '30 Menit', 
         price: 'Rp 200.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/L4csWRh28No' 
     },
     { 
         title: 'NOBAR KLIP 3D', 
@@ -152,7 +152,7 @@ meningkatkan kemampuan kognitif hingga 23% dan mempercepat waktu reaksi. Format 
 proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan sosial dari lahir hingga dewasa. Intinya bukan menjadi orang tua sempurna, melainkan mau terus belajar, beradaptasi dengan perkembangan anak, serta membangun ikatan emosional yang sehat agar anak mandiri, percaya diri, dan berkarakter.`, 
         duration: '30 Menit', 
         price: 'Rp 200.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/8eNYIQ68ucA' 
     },
     { 
         title: 'OUTBOUND', 
@@ -170,7 +170,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
                <br>Outbound sering digunakan oleh perusahaan untuk gathering atau pelatihan karyawan agar lebih adaptif dan kolaboratif.`, 
         duration: '60 Menit', 
         price: 'Rp 50.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/DGFoHV88z2I' 
     },
 ];
 
