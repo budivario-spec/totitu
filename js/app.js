@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
                  style="background-image: url('assets/images/${s.bg}'); transition: transform 0.2s ease;">
                 <div class="card-overlay"></div>
                 <div class="relative z-10 pointer-events-none">
-                    <h3 class="text-white text-[10px] font-bold text-shadow-bold">${s.title}</h3>
+                    <h3 class="text-white text-[12px] font-bold text-shadow-bold">${s.title}</h3>
                     <button class="mt-1 bg-white/20 text-white text-[9px] px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">LIHAT</button>
                 </div>
             </div>
