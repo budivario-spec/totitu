@@ -58,7 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!modal || !iframe) return;
 
         document.getElementById('modalTitle').innerText = s.title;
-        iframe.src = s.video; 
+        
+        // Modifikasi URL untuk mode vertikal/Shorts agar autoplay & loop
+        const videoId = s.video.split('/').pop();
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=0&modestbranding=1`;
+
         document.getElementById('modalDesc').innerText = s.desc;
         document.getElementById('modalDuration').innerText = s.duration;
         document.getElementById('modalPrice').innerText = s.price;
