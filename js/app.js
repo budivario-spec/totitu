@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Menggunakan Event Delegation agar kartu tetap membal meski setelah scroll
     container.addEventListener('touchstart', (e) => {
         const card = e.target.closest('.card-interactive');
-        if (card) card.style.transform = 'scale(0.92)';
+        if (card) card.style.transform = 'scale(0.85)';
     }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
