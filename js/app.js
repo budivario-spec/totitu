@@ -25,9 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('menuContainer');
     if (!container) return;
 
-    // --- FITUR BARU: GLOBAL TOUCH FEEDBACK ---
-    // Menggunakan Event Delegation agar kartu tetap membal meski setelah scroll
+    // --- LOGIKA TOUCH FEEDBACK TERPISAH ---
     container.addEventListener('touchstart', (e) => {
+        // Jika yang disentuh adalah tombol, kartu JANGAN mengecil
+        if (e.target.closest('button')) return;
+
         const card = e.target.closest('.card-interactive');
         if (card) card.style.transform = 'scale(0.85)';
     }, { passive: true });
@@ -41,6 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = e.target.closest('.card-interactive');
         if (card) card.style.transform = 'scale(1)';
     }, { passive: true });
+
+    // Fungsi klik khusus tombol agar kartu tidak ikut bereaksi
+    window.handleBtnClick = (e, index) => {
+        e.stopPropagation(); // Stop klik merambat ke kartu
+        window.showDetail(index);
+    };
 
     window.showDetail = (index) => {
         const s = services[index];
@@ -82,9 +90,13 @@ document.addEventListener("DOMContentLoaded", () => {
                  onclick="showDetail(${i})" 
                  style="background-image: url('assets/images/${s.bg}'); transition: transform 0.2s ease;">
                 <div class="card-overlay"></div>
-                <div class="relative z-10 pointer-events-none">
-                    <h3 class="text-white text-[13px] font-bold text-shadow-bold">${s.title}</h3>
-                    <button class="mt-1 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20">LIHAT</button>
+                <div class="relative z-10">
+                    <h3 class="text-white text-[13px] font-bold text-shadow-bold pointer-events-none uppercase">${s.title}</h3>
+                    <button 
+                        onclick="handleBtnClick(event, ${i})"
+                        class="mt-2 bg-white/20 text-white text-[12px] px-5 py-2 rounded-full backdrop-blur-sm border border-white/20 transition-transform active:scale-90 shadow-sm">
+                        LIHAT
+                    </button>
                 </div>
             </div>
         `;
