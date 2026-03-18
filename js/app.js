@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                <br>Cocok untuk gathering, outbound, atau ulang tahun agar suasana semakin akrab!`, 
         duration: '60 Menit', 
         price: 'Rp 500.000', 
-        video: 'https://www.youtube.com/embed/dQw4w9WgXcQ' 
+        video: 'https://www.youtube.com/embed/PDOvrLyxYu4' 
     },
     { 
         title: 'STORY TELLING', 
