@@ -13,27 +13,45 @@ function updateCartBadge() {
     }
 }
 
-function showToast(message) {
-    // Hapus toast lama jika masih ada
+function showToast(message, isWarning = false) {
     const oldToast = document.querySelector('.toast-notification');
     if (oldToast) oldToast.remove();
 
-    // Buat elemen toast baru
     const toast = document.createElement('div');
-    toast.className = 'toast-notification shadow-xl';
+    // Jika isWarning true, kita beri warna teks sedikit berbeda (misal: orange tua atau merah)
+    toast.className = `toast-notification ${isWarning ? 'text-orange-600' : 'text-gray-800'}`;
     toast.innerText = message;
     document.body.appendChild(toast);
 
-    // Tampilkan dengan animasi
-    setTimeout(() => toast.classList.add('show'), 100);
-
-    // Hilangkan otomatis setelah 2 detik
+    // 1. Muncul di 1/4 atas
     setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 2000);
-}
+        toast.classList.add('show');
+    }, 50);
 
+    // 2. Jika ini peringatan (sudah ada), tidak perlu terbang ke keranjang
+    if (isWarning) {
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 2000);
+    } else {
+        // Jika berhasil tambah, jalankan animasi terbang seperti biasa
+        setTimeout(() => {
+            toast.classList.add('fly');
+            const cartIcon = document.querySelector('.fa-shopping-cart') || document.getElementById('cartIcon');
+            if (cartIcon) {
+                setTimeout(() => {
+                    cartIcon.style.transform = "scale(1.5)";
+                    setTimeout(() => cartIcon.style.transform = "scale(1)", 200);
+                }, 600);
+            }
+        }, 1000);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 1800);
+    }
+}
 // YouTube API Setup
 window.onYouTubeIframeAPIReady = function() {
     player = new YT.Player('player', {
@@ -362,12 +380,26 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             document.getElementById('modalPrice').innerText = s.price;
             
             const btnCart = document.getElementById('btnWA');
-            btnCart.onclick = () => {
-                cart.push(s);
-                updateCartBadge();
-                closeModal();
-                showToast(`${s.title} ditambahkan!`);;
-            };
+            // 1. Cek apakah layanan ini sudah ada di dalam array cart
+            const isAlreadyInCart = cart.find(item => item.title === s.title);
+
+            if (isAlreadyInCart) {
+                // Jika sudah ada: Ubah teks tombol dan berikan pesan "Sudah Ada"
+                btnCart.innerText = "SUDAH DI KERANJANG";
+                btnCart.onclick = () => {
+                    showToast(`${s.title} SUDAH ADA DI KERANJANG`, true); // true = mode peringatan
+                    closeModal();
+                };
+            } else {
+                // Jika belum ada: Tampilan normal untuk menambah ke keranjang
+                btnCart.innerText = "TAMBAH KE KERANJANG";
+                btnCart.onclick = () => {
+                    cart.push(s);
+                    updateCartBadge();
+                    closeModal();
+                    showToast(`${s.title} DITAMBAHKAN!`); // Tanpa 'true' agar bisa terbang
+                };
+            }
         }
     };
 
