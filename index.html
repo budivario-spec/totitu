@@ -14,17 +14,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     
     <style>
-        body { 
-            font-family: 'Fredoka One', cursive; 
+        /* Membungkus seluruh aplikasi */
+        body {
+            background-color: #f3f4f6; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            font-family: 'Fredoka One', cursive;
+            overflow-x: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background-color: #ffffff;
             background-image: url('assets/images/bg_totitu_pwa.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 0 50px rgba(0,0,0,0.2);
         }
+
+        /* PERBAIKAN: Toast agar tidak selebar layar */
+        .toast-notification {
+            position: fixed;
+            top: 30%;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: auto !important; /* Biarkan lebar mengikuti konten */
+            max-width: 85% !important; /* Beri jarak aman dari pinggir bingkai */
+            min-width: 200px;
+            background-color: #ffffff;
+            color: #333333;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            top: 25%; /* Animasi sedikit naik saat muncul */
+        }
+
+        /* Modal Keranjang terkunci lebar 480px */
+        #cartModal {
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100% !important;
+            max-width: 480px !important;
+        }        
 
         .page-container {
             padding: 20px 20px 70px 20px;
@@ -35,12 +85,19 @@
         .text-shadow-bold { text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3); }
 
         nav {
+            position: fixed;
+            bottom: 0;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100% !important;
+            max-width: 480px !important;
             border-top: 0.5px solid rgba(255, 255, 255, 0.5);
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             height: 60px;
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 50;
         }
 
         .nav-item {
@@ -72,19 +129,36 @@
             -webkit-user-select: none;
         }
 
-        #modalVideo {
-            pointer-events: auto;
-            object-fit: cover;
+        /* PERBAIKAN: Detail Modal & Video Player */
+        #detailModal {
+            position: fixed;
+            top: 0;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 100% !important;
+            max-width: 480px !important; /* Terkunci di bingkai */
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            z-index: 100;
         }
 
-        #detailModal:not(.hidden) > div, #cartModal:not(.hidden) > div {
-            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        #videoContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
         }
 
         #player {
-            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%; /* Gunakan % agar patuh pada parent */
             height: 100%;
-            transform: scale(1.3);
+            transform: translate(-50%, -50%) scale(1.3); 
+            object-fit: cover;
         }
 
         @keyframes slideUp {
@@ -105,198 +179,145 @@
             transition: all 0.3s ease-in-out;
         }
 
-        /* Gaya untuk Notifikasi Custom (Toast) di 1/4 Atas */
-        .toast-notification {
-            position: fixed;
-            top: 30%; /* Memposisikan di 1/4 bagian atas layar */
-            left: 50%;
-            transform: translate(-50%, -50%); /* Menjaga agar benar-benar di tengah horizontal */
-            
-            /* Ubah warna di sini */
-            background-color: #ffffff; /* Putih Bersih */
-            color: #333333; /* Teks Hitam/Abu gelap agar terbaca di background putih */
-            
-            padding: 14px 28px;
-            border-radius: 7px; /* Membuat sudut sedikit membulat seperti kartu */
-            font-size: 14px;
-            font-weight: 800; /* Font tebal agar tegas */
-            text-transform: uppercase; /* Agar konsisten dengan gaya desain Anda */
-            
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s, top 0.3s;
-            pointer-events: none;
-            text-align: center;
-            width: auto; /* Lebar otomatis mengikuti teks */
-            min-width: 200px;
-            
-            /* Tambahkan bayangan agar terlihat 'mengapung' di atas konten lain */
-            shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-        }
-
-        .toast-notification.show {
-            opacity: 1;
-            top: 30%; /* Tetap di posisi 1/4 saat muncul */
-        }
-        /* Scrollbar untuk list keranjang agar tetap rapi */
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #fb923c; border-radius: 10px; }
     </style>
 </head>
 <body>
-
-    <div class="page-container">
-        <div id="page-home" class="page-content space-y-4">
-            <header class="text-center mb-6 text-white text-shadow-bold">
-                <h1 class="text-3xl drop-shadow-md">TOTITU</h1>
-                <p class="text-sm drop-shadow-md opacity-90">BERMAIN & BELAJAR!</p>
-            </header>
-            <main id="menuContainer" class="space-y-4"></main>
-        </div>
-
-        <div id="page-testimoni" class="page-content hidden space-y-6">
-            <h2 class="text-2xl text-white text-shadow-bold text-center">CERITA MEREKA</h2>
-            <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-pink-500 card-interactive">
-                <p class="text-gray-700 italic text-sm">"Totitu bikin anak saya jadi suka bikin cerita sendiri. Fitur komiknya juara banget!"</p>
-                <span class="block mt-2 font-bold text-xs text-pink-600">- Bunda Shinta, Jakarta</span>
+    <div id="app-container">
+        <div class="page-container">
+            <div id="page-home" class="page-content space-y-4">
+                <header class="text-center mb-6 text-white text-shadow-bold">
+                    <h1 class="text-3xl drop-shadow-md">TOTITU</h1>
+                    <p class="text-sm drop-shadow-md opacity-90">BERMAIN & BELAJAR!</p>
+                </header>
+                <main id="menuContainer" class="space-y-4"></main>
             </div>
-            <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-yellow-500 card-interactive">
-                <p class="text-gray-700 italic text-sm">"Fun Game-nya seru dan edukatif. Sangat membantu kegiatan akhir pekan kami!"</p>
-                <span class="block mt-2 font-bold text-xs text-yellow-600">- Pak Budi, Bandung</span>
-            </div>
-        </div>
 
-        <div id="page-profil" class="page-content hidden">
-            <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
-                <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <img src="assets/images/logo_totitu.png" alt="Logo Totitu" class="w-full h-full object-contain">
+            <div id="page-testimoni" class="page-content hidden space-y-6">
+                <h2 class="text-2xl text-white text-shadow-bold text-center">CERITA MEREKA</h2>
+                <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-pink-500 card-interactive">
+                    <p class="text-gray-700 italic text-sm">"Totitu bikin anak saya jadi suka bikin cerita sendiri. Fitur komiknya juara banget!"</p>
+                    <span class="block mt-2 font-bold text-xs text-pink-600">- Bunda Shinta, Jakarta</span>
                 </div>
-                <h2 class="text-xl font-black text-blue-600 mb-2">TENTANG TOTITU</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                    Kami adalah wadah kreatifitas yang percaya bahwa setiap anak memiliki bakat luar biasa melalui media digital yang aman.
-                </p>
-                <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
-                    <div class="bg-blue-50 p-3 rounded-2xl text-blue-700">Aman Bagi Anak</div>
-                    <div class="bg-green-50 p-3 rounded-2xl text-green-700">Konten Edukatif</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<div id="cartModal" class="fixed inset-0 bg-black/50 z-[120] hidden flex items-center justify-center backdrop-blur-sm">
-    
-    <div class="bg-white w-full max-w-[320px] h-[90vh] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col relative overflow-hidden">
-        
-        <div class="w-full h-2 bg-white" style="clip-path: polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%);"></div>
-
-        <div class="text-center pt-6 pb-4 px-6">
-            <h3 class="text-[14PX] font-black text-gray-800 uppercase tracking-tighter">KONFIRMASI PEMESANAN</h3>
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-2">Bermain & Belajar</p>
-            <div class="border-b border-dashed border-gray-300 w-full mt-4"></div>
-        </div>
-
-        <div class="flex-grow overflow-y-auto px-6 py-2 custom-scroll">
-            <div id="cartItemsList" class="space-y-4">
-                </div>
-        </div>
-
-        <div class="px-6 pb-8">
-            <div class="border-t border-dashed border-gray-300 pt-4 mb-6">
-                <div class="flex justify-between items-center">
-                    <span class="text-[11px] font-black text-gray-400 uppercase">Total Bayar</span>
-                    <p id="selectedServicePrice" class="text-[14px] font-black text-gray-800">Rp 0</p>
+                <div class="bg-white rounded-3xl p-5 shadow-lg border-l-8 border-yellow-500 card-interactive">
+                    <p class="text-gray-700 italic text-sm">"Fun Game-nya seru dan edukatif. Sangat membantu kegiatan akhir pekan kami!"</p>
+                    <span class="block mt-2 font-bold text-xs text-yellow-600">- Pak Budi, Bandung</span>
                 </div>
             </div>
 
-            <div class="space-y-4 mb-8">
-                <input type="text" id="buyerName" 
-                       class="w-full border-b-2 border-gray-100 py-2 focus:border-orange-400 focus:outline-none font-bold text-[12px] placeholder:text-blue-500" 
-                       placeholder="NAMA PEMESAN">
-                <textarea id="buyerAddress" 
-                       class="w-full border-b-2 border-gray-100 py-2 focus:border-orange-400 focus:outline-none font-bold text-[12px] placeholder:text-blue-500 resize-none" 
-                       placeholder="ALAMAT / LOKASI ACARA"></textarea>
-            </div>
-
-            <div class="flex flex-col gap-3">
-                <button onclick="sendToWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-lg font-black text-[14PX] uppercase tracking-widest active:scale-95 transition-all shadow-lg flex items-center justify-center gap-3">
-                    <i class="fab fa-whatsapp text-xl mb-0.5"></i> KIRIM PESAN
-                </button>
-                <button onclick="closeCart()" class="w-full text-gray-400 py-2 text-[14px] font-bold uppercase tracking-[0.3em]">
-                    KEMBALI
-                </button>
-            </div>
-        </div>
-
-        <div class="w-full h-2 bg-white" style="clip-path: polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%);"></div>
-    </div>
-</div>
-
-    <nav class="fixed bottom-0 left-0 right-0 flex justify-around items-center rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)] z-50">
-        <a href="javascript:void(0)" class="nav-item nav-active flex flex-col items-center" onclick="showPage('home', this)">
-            <i class="fas fa-home text-xl"></i>          
-        </a>
-        <a href="javascript:void(0)" class="nav-item flex flex-col items-center relative" onclick="openCart()">
-            <i class="fas fa-shopping-cart text-xl"></i>
-            <span id="cartCount" class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 rounded-full hidden">0</span>
-        </a>
-        <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('testimoni', this)">
-            <i class="fas fa-star text-xl"></i>          
-        </a>
-        <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('profil', this)">
-            <i class="fas fa-user text-xl"></i>
-        </a>
-    </nav>
-
-    <div id="detailModal" class="fixed inset-0 z-[100] hidden bg-black flex justify-center items-center">
-        <button onclick="closeModal()" class="absolute top-6 right-6 z-[110] bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
-            <i class="fas fa-times"></i>
-        </button>
-
-        <div id="modalDescMode" class="hidden flex flex-col h-full">
-            <div class="px-6 pt-6 pb-2">
-                <h2 id="modalTitle" class="text-2xl font-bold text-white uppercase italic tracking-tighter"></h2>
-                <hr class="mt-2 border-gray-100">
-            </div>
-
-            <div class="flex-grow overflow-y-auto px-6 py-2 custom-scroll">
-                <div id="modalDesc" class="text-gray-200 leading-relaxed text-sm text-left">
+            <div id="page-profil" class="page-content hidden">
+                <div class="bg-white rounded-3xl p-8 shadow-xl text-center">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                        <img src="assets/images/logo_totitu.png" alt="Logo Totitu" class="w-full h-full object-contain">
                     </div>
-                
-                <div class="mt-6 p-4 bg-black rounded-2xl border border-black">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs text-gray-200 uppercase font-bold">Durasi</span>
-                        <span id="modalDuration" class="text-sm font-bold text-orange-400"></span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs text-gray-200 uppercase font-bold">Investasi</span>
-                        <span id="modalPrice" class="text-sm font-bold text-green-600"></span>
+                    <h2 class="text-xl font-black text-blue-600 mb-2">TENTANG TOTITU</h2>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
+                        Kami adalah wadah kreatifitas yang percaya bahwa setiap anak memiliki bakat luar biasa melalui media digital yang aman.
+                    </p>
+                    <div class="grid grid-cols-2 gap-2 text-[11px] font-bold">
+                        <div class="bg-blue-50 p-3 rounded-2xl text-blue-700">Aman Bagi Anak</div>
+                        <div class="bg-green-50 p-3 rounded-2xl text-green-700">Konten Edukatif</div>
                     </div>
                 </div>
             </div>
-
-            <div class="p-6">
-                <button id="btnWA" class="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2">
-                    <i class="fas fa-shopping-cart"></i> MASUKKAN KERANJANG
-                </button>
-            </div>
         </div>
 
-        <div id="modalVideoMode" class="hidden w-full h-full relative bg-black">
-            <div id="videoContainer" class="absolute inset-0 w-full h-full pointer-events-none">
-                 <div id="player"></div> </div>
-
-            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent flex items-center gap-4 z-[105]">
-                <button onclick="togglePlay()" class="text-white text-2xl w-10 h-10 flex items-center justify-center">
-                    <i id="playIcon" class="fas fa-pause"></i>
-                </button>
-                <div class="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
-                    <div id="progressBar" class="h-full bg-orange-500 w-0"></div>
+        <div id="cartModal" class="fixed inset-0 bg-black/50 z-[120] hidden flex items-center justify-center backdrop-blur-sm">
+            <div class="bg-white w-full max-w-[320px] h-[90vh] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col relative overflow-hidden">
+                <div class="w-full h-2 bg-white" style="clip-path: polygon(0% 0%, 5% 100%, 10% 0%, 15% 100%, 20% 0%, 25% 100%, 30% 0%, 35% 100%, 40% 0%, 45% 100%, 50% 0%, 55% 100%, 60% 0%, 65% 100%, 70% 0%, 75% 100%, 80% 0%, 85% 100%, 90% 0%, 95% 100%, 100% 0%);"></div>
+                <div class="text-center pt-6 pb-4 px-6">
+                    <h3 class="text-[14PX] font-black text-gray-800 uppercase tracking-tighter">KONFIRMASI PEMESANAN</h3>
+                    <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-2">Bermain & Belajar</p>
+                    <div class="border-b border-dashed border-gray-300 w-full mt-4"></div>
                 </div>
-                <span id="videoTime" class="text-white text-xs font-mono w-12 text-right">00:00</span>
+                <div class="flex-grow overflow-y-auto px-6 py-2 custom-scroll">
+                    <div id="cartItemsList" class="space-y-4"></div>
+                </div>
+                <div class="px-6 pb-8">
+                    <div class="border-t border-dashed border-gray-300 pt-4 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[11px] font-black text-gray-400 uppercase">Total Bayar</span>
+                            <p id="selectedServicePrice" class="text-[14px] font-black text-gray-800">Rp 0</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4 mb-8">
+                        <input type="text" id="buyerName" class="w-full border-b-2 border-gray-100 py-2 focus:border-orange-400 focus:outline-none font-bold text-[12px] placeholder:text-blue-500" placeholder="NAMA PEMESAN">
+                        <textarea id="buyerAddress" class="w-full border-b-2 border-gray-100 py-2 focus:border-orange-400 focus:outline-none font-bold text-[12px] placeholder:text-blue-500 resize-none" placeholder="ALAMAT / LOKASI ACARA"></textarea>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="sendToWhatsApp()" class="w-full bg-[#25D366] text-white py-4 rounded-lg font-black text-[14PX] uppercase tracking-widest active:scale-95 transition-all shadow-lg flex items-center justify-center gap-3">
+                            <i class="fab fa-whatsapp text-xl mb-0.5"></i> KIRIM PESAN
+                        </button>
+                        <button onclick="closeCart()" class="w-full text-gray-400 py-2 text-[14px] font-bold uppercase tracking-[0.3em]">KEMBALI</button>
+                    </div>
+                </div>
+                <div class="w-full h-2 bg-white" style="clip-path: polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%);"></div>
             </div>
         </div>
-    </div>
+
+        <nav class="flex justify-around items-center rounded-t-3xl">
+            <a href="javascript:void(0)" class="nav-item nav-active flex flex-col items-center" onclick="showPage('home', this)">
+                <i class="fas fa-home text-xl"></i>          
+            </a>
+            <a href="javascript:void(0)" class="nav-item flex flex-col items-center relative" onclick="openCart()">
+                <i class="fas fa-shopping-cart text-xl"></i>
+                <span id="cartCount" class="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 rounded-full hidden">0</span>
+            </a>
+            <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('testimoni', this)">
+                <i class="fas fa-star text-xl"></i>          
+            </a>
+            <a href="javascript:void(0)" class="nav-item flex flex-col items-center" onclick="showPage('profil', this)">
+                <i class="fas fa-user text-xl"></i>
+            </a>
+        </nav>
+
+        <div id="detailModal" class="hidden">
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-[110] bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div id="modalDescMode" class="hidden flex flex-col h-full">
+                <div class="px-6 pt-6 pb-2">
+                    <h2 id="modalTitle" class="text-2xl font-bold text-white uppercase italic tracking-tighter"></h2>
+                    <hr class="mt-2 border-gray-100">
+                </div>
+                <div class="flex-grow overflow-y-auto px-6 py-2 custom-scroll">
+                    <div id="modalDesc" class="text-gray-200 leading-relaxed text-sm text-left"></div>
+                    <div class="mt-6 p-4 bg-black rounded-2xl border border-black">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-gray-200 uppercase font-bold">Durasi</span>
+                            <span id="modalDuration" class="text-sm font-bold text-orange-400"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-200 uppercase font-bold">Investasi</span>
+                            <span id="modalPrice" class="text-sm font-bold text-green-600"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <button id="btnWA" class="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-shopping-cart"></i> MASUKKAN KERANJANG
+                    </button>
+                </div>
+            </div>
+
+            <div id="modalVideoMode" class="hidden w-full h-full relative bg-black">
+                <div id="videoContainer">
+                     <div id="player"></div> 
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent flex items-center gap-4 z-[105]">
+                    <button onclick="togglePlay()" class="text-white text-2xl w-10 h-10 flex items-center justify-center">
+                        <i id="playIcon" class="fas fa-pause"></i>
+                    </button>
+                    <div class="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                        <div id="progressBar" class="h-full bg-orange-500 w-0"></div>
+                    </div>
+                    <span id="videoTime" class="text-white text-xs font-mono w-12 text-right">00:00</span>
+                </div>
+            </div>
+        </div>
+    </div> 
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
