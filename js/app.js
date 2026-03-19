@@ -58,13 +58,11 @@ window.onYouTubeIframeAPIReady = function() {
         height: '100%',
         width: '100%',
         playerVars: {
-            'autoplay': 0,
+            'autoplay': 1,
+            'playsinline': 1, // WAJIB ADA untuk HP
             'controls': 0,
-            'modestbranding': 1,
             'rel': 0,
-            'showinfo': 0,
-            'iv_load_policy': 3,
-            'fs': 0
+            'modestbranding': 1
         },
         events: {
             'onStateChange': onPlayerStateChange
