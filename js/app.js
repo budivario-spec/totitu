@@ -1,8 +1,19 @@
 // 1. GLOBAL VARIABLES & YOUTUBE API
 let player;
 let progressInterval;
+let cart = []; 
+let currentSelectedService = null; 
 
-// Fungsi ini HARUS di luar DOMContentLoaded agar dipanggil oleh YouTube SDK
+// Fungsi update badge angka di navigasi
+function updateCartBadge() {
+    const badge = document.getElementById('cartCount');
+    if (badge) {
+        badge.innerText = cart.length;
+        cart.length > 0 ? badge.classList.remove('hidden') : badge.classList.add('hidden');
+    }
+}
+
+// YouTube API Setup
 window.onYouTubeIframeAPIReady = function() {
     player = new YT.Player('player', {
         height: '100%',
@@ -52,15 +63,111 @@ function startTracking() {
     }, 500);
 }
 
-// Global Controls
+// --- LOGIKA KERANJANG (STRUK) & WHATSAPP ---
+
+window.openCart = () => {
+    if (cart.length === 0) {
+        alert("Keranjang masih kosong. Pilih layanan terlebih dahulu!");
+        return;
+    }
+
+    const cartModal = document.getElementById('cartModal');
+    const listContainer = document.getElementById('cartItemsList');
+    const totalPriceElement = document.getElementById('selectedServicePrice');
+    
+    // Bersihkan isi list
+    listContainer.innerHTML = '';
+    let totalHarga = 0;
+
+    // Loop data keranjang untuk tampilan STRUK
+    cart.forEach((item, index) => {
+        // Konversi harga string "Rp 500.000" ke angka untuk perhitungan
+        const hargaAngka = parseInt(item.price.replace(/[^0-9]/g, ''));
+        totalHarga += hargaAngka;
+
+        const itemRow = document.createElement('div');
+        itemRow.className = "flex justify-between items-start border-b border-gray-50 pb-2";
+        itemRow.innerHTML = `
+            <div class="flex-1 pr-4">
+                <p class="text-[11px] font-bold text-gray-800 uppercase leading-tight">${item.title}</p>
+                <button onclick="removeFromCart(${index})" class="text-[9px] text-red-400 font-bold uppercase mt-1">Hapus</button>
+            </div>
+            <p class="text-[11px] font-black text-gray-800">${item.price}</p>
+        `;
+        listContainer.appendChild(itemRow);
+    });
+
+    totalPriceElement.innerText = `Rp ${totalHarga.toLocaleString('id-ID')}`;
+    cartModal.classList.remove('hidden');
+};
+
+window.removeFromCart = (index) => {
+    cart.splice(index, 1);
+    updateCartBadge();
+    if (cart.length === 0) {
+        closeCart();
+    } else {
+        openCart(); // Refresh tampilan struk
+    }
+};
+
+window.closeCart = () => {
+    document.getElementById('cartModal').classList.add('hidden');
+};
+
+window.sendToWhatsApp = () => {
+    const name = document.getElementById('buyerName').value;
+    const address = document.getElementById('buyerAddress').value;
+
+    if (!name || !address) {
+        alert("Mohon lengkapi Nama dan Alamat/Lokasi Acara!");
+        return;
+    }
+
+    const opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const tanggalHariIni = new Date().toLocaleDateString('id-ID', opsiTanggal);
+
+    let message = `*PESANAN TOTITU*\n`;
+    message += `${tanggalHariIni}\n`;
+    message += `----------------------------\n`;
+    message += `*Data Pemesan:*\n`;
+    message += `Nama: ${name}\n`;
+    message += `Alamat: ${address}\n`;
+    message += `----------------------------\n`;
+    message += `*DAFTAR LAYANAN:*\n`;
+
+    let total = 0;
+    cart.forEach((item, index) => {
+        message += `${index + 1}. ${item.title} (${item.price})\n`;
+        const hargaAngka = parseInt(item.price.replace(/[^0-9]/g, ''));
+        total += hargaAngka;
+    });
+
+    message += `----------------------------\n`;
+    message += `*TOTAL: Rp ${total.toLocaleString('id-ID')}*\n`;
+    message += `----------------------------`;
+
+    // 1. Buka WhatsApp
+    const phoneNumber = "6288216740444"; 
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+
+    // 2. KOSONGKAN KERANJANG SETELAH KLIK
+    cart = []; 
+    updateCartBadge(); 
+    nameInput.value = '';
+    addressInput.value = '';
+    closeCart(); // Menutup layar keranjang/struk
+    
+    // Optional: Bersihkan input form agar siap untuk pesanan berikutnya
+    document.getElementById('buyerName').value = '';
+    document.getElementById('buyerAddress').value = '';
+};
+// --- MODAL CONTROLS ---
+
 window.togglePlay = () => {
     if (!player) return;
     const state = player.getPlayerState();
-    if (state === YT.PlayerState.PLAYING) {
-        player.pauseVideo();
-    } else {
-        player.playVideo();
-    }
+    state === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();
 };
 
 window.closeModal = function() {
@@ -69,14 +176,15 @@ window.closeModal = function() {
     clearInterval(progressInterval);
 };
 
-// 2. MAIN LOGIC
+// --- MAIN LOGIC ---
+
 document.addEventListener("DOMContentLoaded", () => {
     const services = [
-    { 
-        title: 'FUN GAME', 
-        icon: 'fa-gamepad', 
-        bg: 'bg_game.png', 
-        desc: `Permainan yang dirancang khusus untuk menciptakan suasana santai, lucu, dan menyenangkan. Fokus utamanya adalah rekreasi dan hiburan, bukan kompetisi berat.
+        { 
+            title: 'FUN GAME', 
+            icon: 'fa-gamepad', 
+            bg: 'bg_game.png', 
+            desc: `Permainan yang dirancang khusus untuk menciptakan suasana santai, lucu, dan menyenangkan. Fokus utamanya adalah rekreasi dan hiburan, bukan kompetisi berat.
                <br><br>
                <b>Poin Penting:</b>
                <ul class="text-left list-disc ml-5 mt-2 space-y-1">
@@ -84,16 +192,16 @@ document.addEventListener("DOMContentLoaded", () => {
                   <li><b>Karakteristik:</b> Ringan, mudah dipahami, dan penuh humor.</li>
                   <li><b>Contoh:</b> Ice breaking, lomba estafet, dan aktivitas outdoor.</li>
                </ul>
-               <br>Cocok untuk gathering, outbound, atau ulang tahun agar suasana semakin akrab!`, 
-        duration: '60 Menit', 
-        price: 'Rp 500.000', 
-        video: 'https://www.youtube.com/embed/PDOvrLyxYu4' 
-    },
-    { 
-        title: 'STORY TELLING', 
-        icon: 'fa-book-open', 
-        bg: 'bg_story.png', 
-        desc: `Menghidupkan imajinasi anak melalui dongeng interaktif yang kaya akan pesan moral dan nilai-nilai kebaikan.
+               <br>Cocok untuk gathering, outbound, atau ulang tahun agar suasana semakin akrab!`,  
+            duration: '60 Menit', 
+            price: 'Rp 500.000', 
+            video: 'https://www.youtube.com/embed/PDOvrLyxYu4' 
+        },
+        { 
+            title: 'STORY TELLING', 
+            icon: 'fa-book-open', 
+            bg: 'bg_story.png', 
+            desc: `Menghidupkan imajinasi anak melalui dongeng interaktif yang kaya akan pesan moral dan nilai-nilai kebaikan.
                <br><br>
                <b>Kenapa Story Telling?</b>
                <ul class="text-left list-disc ml-5 mt-2 space-y-1">
@@ -102,26 +210,26 @@ document.addEventListener("DOMContentLoaded", () => {
                   <li><b>Manfaat:</b> Melatih fokus, empati, dan kemampuan berbahasa.</li>
                </ul>
                <br>Cara terbaik menanamkan karakter positif melalui kisah yang tak terlupakan.`, 
-        duration: '90 Menit', 
-        price: 'Rp 500.000', 
-        video: 'https://www.youtube.com/embed/Li3ikGkjvvI' 
-    },
-    { 
-        title: 'BUAT KOMIK', 
-        icon: 'fa-pen-nib', 
-        bg: 'bg_komik.png', 
-        desc: `Istilah "komik" sebenarnya berasal dari Bahasa Yunani, yaitu "komikos" yang dapat diartikan sebagai hiburan atau kesenangan. Meskipun ada hubungan dengan komedi, komik tidak hanya membahas hal-hal lucu saja.
+            duration: '90 Menit', 
+            price: 'Rp 500.000', 
+            video: 'https://www.youtube.com/embed/Li3ikGkjvvI' 
+        },
+        { 
+            title: 'BUAT KOMIK', 
+            icon: 'fa-pen-nib', 
+            bg: 'bg_komik.png', 
+            desc: `Istilah "komik" sebenarnya berasal dari Bahasa Yunani, yaitu "komikos" yang dapat diartikan sebagai hiburan atau kesenangan. Meskipun ada hubungan dengan komedi, komik tidak hanya membahas hal-hal lucu saja.
                <br><br>
                Komik adalah seni yang menggabungkan gambar dan teks dalam urutan tertentu. Fungsi komik yaitu sebagai medium informasi dan menciptakan pengalaman estetis bagi pembacanya.`, 
-        duration: '60 Menit', 
-        price: 'Rp 400.000', 
-        video: 'https://www.youtube.com/embed/0-SFMGhHhwc' 
-    },
-    { 
-        title: 'SULAP TEMATIK', 
-        icon: 'fa-magic', 
-        bg: 'bg_sulap.png', 
-        desc: `Pertunjukan sulap yang dibungkus dengan tema tertentu (misal: edukasi, kebersihan, atau kejujuran) sehingga tidak hanya memukau tapi juga memberi pelajaran.
+            duration: '60 Menit', 
+            price: 'Rp 400.000', 
+            video: 'https://www.youtube.com/embed/0-SFMGhHhwc' 
+        },
+        { 
+            title: 'SULAP TEMATIK', 
+            icon: 'fa-magic', 
+            bg: 'bg_sulap.png', 
+            desc: `Pertunjukan sulap yang dibungkus dengan tema tertentu (misal: edukasi, kebersihan, atau kejujuran) sehingga tidak hanya memukau tapi juga memberi pelajaran.
                <br><br>
                <b>Keunggulan:</b>
                <ul class="text-left list-disc ml-5 mt-2 space-y-1">
@@ -130,35 +238,35 @@ document.addEventListener("DOMContentLoaded", () => {
                   <li><b>Edukasi:</b> Di balik setiap trik, ada pesan moral yang disampaikan.</li>
                </ul>
                <br>Momen ajaib yang akan selalu diingat oleh si kecil!`, 
-        duration: '60 Menit', 
-        price: 'Rp 400.000', 
-        video: 'https://www.youtube.com/embed/L4csWRh28No' 
-    },
-    { 
-        title: 'NOBAR KLIP 3D', 
-        icon: 'fa-book-open', 
-        bg: 'bg_nobar.png', 
-        desc: `Film 3D menawarkan pengalaman menonton yang lebih imersif dan mendalam, sekaligus memberikan manfaat kesehatan otak seperti
+            duration: '60 Menit', 
+            price: 'Rp 400.000', 
+            video: 'https://www.youtube.com/embed/L4csWRh28No' 
+        },
+        { 
+            title: 'NOBAR KLIP 3D', 
+            icon: 'fa-video', 
+            bg: 'bg_nobar.png', 
+            desc: `Film 3D menawarkan pengalaman menonton yang lebih imersif dan mendalam, sekaligus memberikan manfaat kesehatan otak seperti
 meningkatkan kemampuan kognitif hingga 23% dan mempercepat waktu reaksi. Format ini juga merangsang imajinasi, memberikan hiburan visual yang lebih nyata, serta sering digunakan sebagai media pembelajaran yang interaktif dan menarik.`, 
-        duration: '60 Menit', 
-        price: 'Rp 300.000', 
-        video: 'https://www.youtube.com/embed/J2Z5co3v3WA' 
-    },
-    { 
-        title: 'PARENTING', 
-        icon: 'fa-magic', 
-        bg: 'bg_parenting.png', 
-        desc: `Parenting adalah
+            duration: '60 Menit', 
+            price: 'Rp 300.000', 
+            video: 'https://www.youtube.com/embed/J2Z5co3v3WA' 
+        },
+        { 
+            title: 'PARENTING', 
+            icon: 'fa-heart', 
+            bg: 'bg_parenting.png', 
+            desc: `Parenting adalah
 proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan sosial dari lahir hingga dewasa. Intinya bukan menjadi orang tua sempurna, melainkan mau terus belajar, beradaptasi dengan perkembangan anak, serta membangun ikatan emosional yang sehat agar anak mandiri, percaya diri, dan berkarakter.`, 
-        duration: '90 Menit', 
-        price: 'Rp 500.000', 
-        video: 'https://www.youtube.com/embed/8eNYIQ68ucA' 
-    },
-    { 
-        title: 'OUTBOUND', 
-        icon: 'fa-gamepad', 
-        bg: 'bg_outbound.png', 
-        desc: `Outbound adalah serangkaian kegiatan pembelajaran di luar ruangan (outdoor) yang memanfaatkan permainan edukatif, simulasi fisik, dan mental untuk pengembangan diri, tim, dan kepemimpinan. Aktivitas ini bertujuan meningkatkan kerjasama, komunikasi, kepercayaan diri, dan pemecahan masalah melalui experiential learning di alam terbuka.
+            duration: '90 Menit', 
+            price: 'Rp 500.000', 
+            video: 'https://www.youtube.com/embed/8eNYIQ68ucA' 
+        },
+        { 
+            title: 'OUTBOUND', 
+            icon: 'fa-tree', 
+            bg: 'bg_outbound.png', 
+            desc: `Outbound adalah serangkaian kegiatan pembelajaran di luar ruangan (outdoor) yang memanfaatkan permainan edukatif, simulasi fisik, dan mental untuk pengembangan diri, tim, dan kepemimpinan. Aktivitas ini bertujuan meningkatkan kerjasama, komunikasi, kepercayaan diri, dan pemecahan masalah melalui experiential learning di alam terbuka.
                <br><br>
                <b>Berikut adalah poin-poin penting mengenai outbound:</b>
                <ul class="text-left list-disc ml-5 mt-2 space-y-1">
@@ -168,36 +276,48 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
                   <li><b>Manfaat:</b> Meningkatkan keterampilan sosial, membangun pola pikir kreatif, serta memperkuat kecerdasan emosional dan spiritual.</li>
                </ul>
                <br>Outbound sering digunakan oleh perusahaan untuk gathering atau pelatihan karyawan agar lebih adaptif dan kolaboratif.`, 
-        duration: '60 Menit', 
-        price: 'Rp 500.000', 
-        video: 'https://www.youtube.com/embed/DGFoHV88z2I' 
-    },
-];
+            duration: '60 Menit', 
+            price: 'Rp 500.000', 
+            video: 'https://www.youtube.com/embed/DGFoHV88z2I' 
+        },
+    ];
 
     const container = document.getElementById('menuContainer');
     if (!container) return;
 
-    // Feedback Touch
-    container.addEventListener('touchstart', (e) => {
-        if (e.target.closest('button')) return;
-        const card = e.target.closest('.card-interactive');
-        if (card) {
-            card.style.transform = 'scale(0.92)';
-            card.style.filter = 'brightness(0.9)';
+    // Render Kartu Utama & Grid
+    let gridCardsHtml = '';
+    services.forEach((s, i) => {
+        if (i === 0) {
+            container.innerHTML = `
+                <div class="card-image-base card-interactive h-32 flex flex-col justify-between p-3 mb-4 shadow-xl cursor-pointer" 
+                     onclick="openModal(0, 'desc')" 
+                     style="background-image: url('assets/images/${s.bg}');">
+                    <div class="absolute inset-0 bg-black/20 z-0"></div>
+                    <div class="relative z-10"><h3 class="text-white text-[12px] font-bold text-shadow-bold uppercase tracking-wide">${s.title}</h3></div>
+                    <div class="relative z-10 w-full">
+                        <button onclick="handleBtnVideo(event, 0)" class="w-full bg-white/20 text-white text-[10px] py-2 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">LIHAT VIDEO</button>
+                    </div>
+                </div>
+            `;
+        } else {
+            gridCardsHtml += `
+                <div class="card-image-base card-interactive h-32 flex flex-col justify-between p-3 cursor-pointer" 
+                     onclick="openModal(${i}, 'desc')" 
+                     style="background-image: url('assets/images/${s.bg}');">
+                    <div class="absolute inset-0 bg-black/20 z-0"></div>
+                    <div class="relative z-10"><h3 class="text-white text-[12px] font-bold text-shadow-bold uppercase leading-tight">${s.title}</h3></div>
+                    <div class="relative z-10 w-full">
+                        <button onclick="handleBtnVideo(event, ${i})" class="w-full bg-white/20 text-white text-[10px] py-1.5 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">LIHAT VIDEO</button>
+                    </div>
+                </div>`;
         }
-    }, { passive: true });
+    });
+    container.innerHTML += `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
 
-    container.addEventListener('touchend', (e) => {
-        const card = e.target.closest('.card-interactive');
-        if (card) {
-            card.style.transform = 'scale(1)';
-            card.style.filter = 'brightness(1)';
-        }
-    }, { passive: true });
-
-    // Fungsi Buka Modal
     window.openModal = (index, mode) => {
         const s = services[index];
+        currentSelectedService = s; 
         const modal = document.getElementById('detailModal');
         const descMode = document.getElementById('modalDescMode');
         const videoMode = document.getElementById('modalVideoMode');
@@ -208,9 +328,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             descMode.classList.add('hidden');
             videoMode.classList.remove('hidden');
             const videoId = s.video.split('/').pop();
-            if (player && player.loadVideoById) {
-                player.loadVideoById(videoId);
-            }
+            if (player && player.loadVideoById) player.loadVideoById(videoId);
         } else {
             videoMode.classList.add('hidden');
             descMode.classList.remove('hidden');
@@ -220,70 +338,19 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             document.getElementById('modalDesc').innerHTML = s.desc;
             document.getElementById('modalDuration').innerText = s.duration;
             document.getElementById('modalPrice').innerText = s.price;
-            document.getElementById('btnWA').href = `https://wa.me/6288216740444?text=Halo Totitu, saya mau pesan ${s.title}`;
+            
+            const btnCart = document.getElementById('btnWA');
+            btnCart.onclick = () => {
+                cart.push(s);
+                updateCartBadge();
+                closeModal();
+                alert(`${s.title} ditambahkan!`);
+            };
         }
     };
 
     window.handleBtnVideo = (e, index) => {
         e.stopPropagation();
-        const btn = e.currentTarget;
-        btn.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            btn.style.transform = 'scale(1)';
-            window.openModal(index, 'video');
-        }, 100);
+        window.openModal(index, 'video');
     };
-
-    // Rendering Kartu Utama (Besar) - Kembali ke Ukuran Semula, Teks Unggulan Dihapus
-    const firstCardHtml = `
-        <div class="card-image-base card-interactive h-32 flex flex-col justify-between p-3 mb-4 shadow-xl cursor-pointer" 
-             onclick="openModal(0, 'desc')" 
-             style="background-image: url('assets/images/${services[0].bg}');">
-            
-            <div class="absolute inset-0 bg-black/20 z-0"></div>
-
-            <div class="relative z-10">
-                <h3 class="text-white text-[12px] font-bold text-shadow-bold uppercase tracking-wide">
-                    ${services[0].title}
-                </h3>
-            </div>
-
-            <div class="relative z-10 w-full">
-                <button 
-                    onclick="handleBtnVideo(event, 0)"
-                    class="w-full bg-white/20 text-white text-[10px] py-2 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">
-                    LIHAT VIDEO
-                </button>
-            </div>
-        </div>
-    `;
-
-    // Rendering Kartu Grid (Kecil)
-    let gridCardsHtml = '';
-    for (let i = 1; i < services.length; i++) {
-        const s = services[i];
-    gridCardsHtml += `
-        <div class="card-image-base card-interactive h-32 flex flex-col justify-between p-3 cursor-pointer" 
-             onclick="openModal(${i}, 'desc')" 
-             style="background-image: url('assets/images/${s.bg}');">
-            
-            <div class="absolute inset-0 bg-black/20 z-0"></div>
-
-            <div class="relative z-10">
-                <h3 class="text-white text-[12px] font-bold text-shadow-bold uppercase leading-tight">
-                    ${s.title}
-                </h3>
-            </div>
-
-            <div class="relative z-10 w-full">
-                <button 
-                    onclick="handleBtnVideo(event, ${i})"
-                    class="w-full bg-white/20 text-white text-[10px] py-1.5 rounded-xl backdrop-blur-md border border-white/30 shadow-sm font-bold uppercase active:scale-90 transition-transform">
-                    LIHAT VIDEO
-                </button>
-            </div>
-        </div>
-    `;    }
-
-container.innerHTML = firstCardHtml + `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
 });
