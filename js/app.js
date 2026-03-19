@@ -106,7 +106,7 @@ function startTracking() {
 
 window.openCart = () => {
     if (cart.length === 0) {
-        alert("Keranjang masih kosong. Pilih layanan terlebih dahulu!");
+        showToast("Keranjang kosong.", true);
         return;
     }
 
