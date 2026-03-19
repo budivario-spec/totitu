@@ -148,8 +148,9 @@ window.sendToWhatsApp = () => {
     message += `----------------------------`;
 
     // 1. Buka WhatsApp
-    const phoneNumber = "6288216740444"; 
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    const phoneNumber = "6288216740444";
+    const encodedMessage = encodeURIComponent(message); 
+    window.location.href = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
     // 2. KOSONGKAN KERANJANG SETELAH KLIK
     cart = []; 
