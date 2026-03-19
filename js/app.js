@@ -386,6 +386,8 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             if (isAlreadyInCart) {
                 // Jika sudah ada: Ubah teks tombol dan berikan pesan "Sudah Ada"
                 btnCart.innerText = "SUDAH DI KERANJANG";
+                btnCart.classList.remove('bg-green-500', 'bg-[#25D366]'); 
+                btnCart.classList.add('bg-orange-500');
                 btnCart.onclick = () => {
                     showToast(`${s.title} SUDAH ADA DI KERANJANG`, true); // true = mode peringatan
                     closeModal();
@@ -393,6 +395,8 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
             } else {
                 // Jika belum ada: Tampilan normal untuk menambah ke keranjang
                 btnCart.innerText = "TAMBAH KE KERANJANG";
+                btnCart.classList.remove('bg-orange-500');
+                btnCart.classList.add('bg-green-500');
                 btnCart.onclick = () => {
                     cart.push(s);
                     updateCartBadge();
