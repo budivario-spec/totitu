@@ -13,6 +13,27 @@ function updateCartBadge() {
     }
 }
 
+function showToast(message) {
+    // Hapus toast lama jika masih ada
+    const oldToast = document.querySelector('.toast-notification');
+    if (oldToast) oldToast.remove();
+
+    // Buat elemen toast baru
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification shadow-xl';
+    toast.innerText = message;
+    document.body.appendChild(toast);
+
+    // Tampilkan dengan animasi
+    setTimeout(() => toast.classList.add('show'), 100);
+
+    // Hilangkan otomatis setelah 2 detik
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2000);
+}
+
 // YouTube API Setup
 window.onYouTubeIframeAPIReady = function() {
     player = new YT.Player('player', {
@@ -345,7 +366,7 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
                 cart.push(s);
                 updateCartBadge();
                 closeModal();
-                alert(`${s.title} ditambahkan!`);
+                showToast(`${s.title} ditambahkan!`);;
             };
         }
     };

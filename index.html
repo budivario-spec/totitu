@@ -105,6 +105,40 @@
             transition: all 0.3s ease-in-out;
         }
 
+        /* Gaya untuk Notifikasi Custom (Toast) di 1/4 Atas */
+        .toast-notification {
+            position: fixed;
+            top: 30%; /* Memposisikan di 1/4 bagian atas layar */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Menjaga agar benar-benar di tengah horizontal */
+            
+            /* Ubah warna di sini */
+            background-color: #ffffff; /* Putih Bersih */
+            color: #333333; /* Teks Hitam/Abu gelap agar terbaca di background putih */
+            
+            padding: 14px 28px;
+            border-radius: 7px; /* Membuat sudut sedikit membulat seperti kartu */
+            font-size: 14px;
+            font-weight: 800; /* Font tebal agar tegas */
+            text-transform: uppercase; /* Agar konsisten dengan gaya desain Anda */
+            
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s, top 0.3s;
+            pointer-events: none;
+            text-align: center;
+            width: auto; /* Lebar otomatis mengikuti teks */
+            min-width: 200px;
+            
+            /* Tambahkan bayangan agar terlihat 'mengapung' di atas konten lain */
+            shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            top: 30%; /* Tetap di posisi 1/4 saat muncul */
+        }
         /* Scrollbar untuk list keranjang agar tetap rapi */
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #fb923c; border-radius: 10px; }
