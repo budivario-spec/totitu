@@ -215,24 +215,75 @@ window.sendToWhatsApp = () => {
     const name = nameInput.value;
     const address = addressInput.value;
 
-    if (!name || !address) { alert("Mohon lengkapi Nama dan Alamat!"); return; }
+    if (!name || !address) {
+        alert("Mohon lengkapi Nama dan Alamat/Lokasi Acara!");
+        return;
+    }
 
-    let totalHargaAnalytics = 0;
+    // 1. HITUNG DATA UNTUK LAPORAN JUALAN
+    let totalNilaiPesanan = 0;
+    const daftarProduk = cart.map(item => {
+        const harga = parseInt(item.price.replace(/[^0-9]/g, ''));
+        totalNilaiPesanan += harga;
+        return { item_name: item.title, price: harga };
+    });
+
+    // 2. KIRIM PERISTIWA KE GOOGLE ANALYTICS (PENTING!)
+    if (typeof gtag === 'function') {
+        // Event standar untuk "Pesanan Terkirim"
+        gtag('event', 'generate_lead', {
+            'currency': 'IDR',
+            'value': totalNilaiPesanan, // Anda bisa lihat total rupiah jualan di Analytics
+            'transaction_id': 'WA_' + new Date().getTime(), // ID unik pesanan
+            'items': daftarProduk
+        });
+
+        // Event tambahan agar mudah dibaca di daftar peristiwa
+        gtag('event', 'whatsapp_order_sent', {
+            'buyer_name': name,
+            'total_items': cart.length
+        });
+    }
+
+    // 3. JEDA SEJENAK LALU KIRIM KE WA
+    const phoneNumber = "6288216740444";
     let listLayanan = "";
     cart.forEach((item, index) => {
-        totalHargaAnalytics += parseInt(item.price.replace(/[^0-9]/g, ''));
         listLayanan += `${index + 1}. ${item.title} (${item.price})\n`;
     });
 
-    if (typeof gtag === 'function') {
-        gtag('event', 'generate_lead', { 'currency': 'IDR', 'value': totalHargaAnalytics, 'items': cart.map(i => ({ 'item_name': i.title })) });
-    }
-
     const tanggal = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    let message = `*PESANAN TOTITU*\n${tanggal}\n----------------------------\n*Data Pemesan:*\nNama: ${name}\nAlamat: ${address}\n----------------------------\n*DAFTAR LAYANAN:*\n${listLayanan}----------------------------\n*TOTAL: Rp ${totalHargaAnalytics.toLocaleString('id-ID')}*\n----------------------------`;
+    let message = `*PESANAN TOTITU*\n${tanggal}\n----------------------------\n*Data Pemesan:*\nNama: ${name}\nAlamat: ${address}\n----------------------------\n*DAFTAR LAYANAN:*\n${listLayanan}----------------------------\n*TOTAL: Rp ${totalNilaiPesanan.toLocaleString('id-ID')}*\n----------------------------`;
 
-    window.location.href = `https://wa.me/6288216740444?text=${encodeURIComponent(message)}`;
-    cart = []; updateCartBadge(); nameInput.value = ''; addressInput.value = ''; closeCart();
+    // --- TRACKING PRODUK TERPOPULER ---
+        if (typeof gtag === 'function') {
+            cart.forEach((item) => {
+                gtag('event', 'item_ordered_to_wa', {
+                    'item_name': item.title,
+                    'price': parseInt(item.price.replace(/[^0-9]/g, '')),
+                    'category': 'Service'
+                });
+            });
+
+            // Event utama untuk konversi jualan
+            gtag('event', 'generate_lead', {
+                'currency': 'IDR',
+                'value': totalNilaiPesanan,
+                'items': cart.map(i => ({ 'item_name': i.title }))
+            });
+        }
+
+    // Jeda 150ms agar Analytics tidak "terputus" saat pindah halaman
+    setTimeout(() => {
+        window.location.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        
+        // Reset form setelah kirim
+        cart = []; 
+        updateCartBadge(); 
+        nameInput.value = '';
+        addressInput.value = '';
+        closeCart();
+    }, 150);
 };
 
 // --- MODAL CONTROLS ---
