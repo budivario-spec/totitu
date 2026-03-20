@@ -329,21 +329,22 @@
                 </div>
             </div>
 
-            <div id="modalVideoMode" class="hidden">
-                <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
+            <div id="modalVideoMode" class="hidden px-4">
+                <div class="relative w-full max-w-[320px] mx-auto aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-gray-800">
+                    
                     <div id="player"></div>
                     
-                    <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                    <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
                         <div class="flex items-center justify-between text-white">
-                            <button onclick="togglePlay()" class="hover:scale-110 transition-transform">
-                                <i id="playIcon" class="fas fa-play text-xl"></i>
+                            <button onclick="togglePlay()" class="w-10 h-10 flex items-center justify-center bg-white/20 rounded-full backdrop-blur-md">
+                                <i id="playIcon" class="fas fa-play text-sm"></i>
                             </button>
                             <div class="flex-1 mx-4">
-                                <div class="h-1 w-full bg-white/20 rounded-full overflow-hidden">
+                                <div class="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
                                     <div id="progressBar" class="h-full bg-red-600 w-0 transition-all duration-300"></div>
                                 </div>
                             </div>
-                            <span id="videoTime" class="text-[10px] font-mono">00:00</span>
+                            <span id="videoTime" class="text-[10px] font-mono font-bold">00:00</span>
                         </div>
                     </div>
                 </div>
