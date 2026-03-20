@@ -153,62 +153,57 @@ window.closeCart = () => {
 };
 
 window.sendToWhatsApp = () => {
-    const name = document.getElementById('buyerName').value;
-    const address = document.getElementById('buyerAddress').value;
-
-   // --- TAMBAHAN UNTUK TRACKING KLIK KARTU ---
-    if (typeof gtag === 'function' && mode === 'desc') {
-        gtag('event', 'view_service_detail', {
-            'service_name': s.title,
-            'content_type': 'service_card'
-        });
-    }
-    // ------------------------------------------
+    const nameInput = document.getElementById('buyerName');
+    const addressInput = document.getElementById('buyerAddress');
+    const name = nameInput.value;
+    const address = addressInput.value;
 
     if (!name || !address) {
         alert("Mohon lengkapi Nama dan Alamat/Lokasi Acara!");
         return;
     }
 
+    let totalHargaAnalytics = 0;
+    let listLayanan = "";
+    
+    cart.forEach((item, index) => {
+        const hargaAngka = parseInt(item.price.replace(/[^0-9]/g, ''));
+        totalHargaAnalytics += hargaAngka;
+        listLayanan += `${index + 1}. ${item.title} (${item.price})\n`;
+    });
+
+    // --- TRACKING GA4: GENERATE LEAD ---
+    if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', {
+            'currency': 'IDR',
+            'value': totalHargaAnalytics,
+            'items': cart.map(item => ({ 'item_name': item.item_id || item.title }))
+        });
+    }
+
     const opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const tanggalHariIni = new Date().toLocaleDateString('id-ID', opsiTanggal);
 
-    let message = `*PESANAN TOTITU*\n`;
-    message += `${tanggalHariIni}\n`;
+    let message = `*PESANAN TOTITU*\n${tanggalHariIni}\n`;
     message += `----------------------------\n`;
-    message += `*Data Pemesan:*\n`;
-    message += `Nama: ${name}\n`;
-    message += `Alamat: ${address}\n`;
+    message += `*Data Pemesan:*\nNama: ${name}\nAlamat: ${address}\n`;
     message += `----------------------------\n`;
-    message += `*DAFTAR LAYANAN:*\n`;
-
-    let total = 0;
-    cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.title} (${item.price})\n`;
-        const hargaAngka = parseInt(item.price.replace(/[^0-9]/g, ''));
-        total += hargaAngka;
-    });
-
+    message += `*DAFTAR LAYANAN:*\n${listLayanan}`;
     message += `----------------------------\n`;
-    message += `*TOTAL: Rp ${total.toLocaleString('id-ID')}*\n`;
+    message += `*TOTAL: Rp ${totalHargaAnalytics.toLocaleString('id-ID')}*\n`;
     message += `----------------------------`;
 
-    // 1. Buka WhatsApp
     const phoneNumber = "6288216740444";
-    const encodedMessage = encodeURIComponent(message); 
-    window.location.href = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.location.href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
-    // 2. KOSONGKAN KERANJANG SETELAH KLIK
+    // Reset keranjang
     cart = []; 
     updateCartBadge(); 
     nameInput.value = '';
     addressInput.value = '';
-    closeCart(); // Menutup layar keranjang/struk
-    
-    // Optional: Bersihkan input form agar siap untuk pesanan berikutnya
-    document.getElementById('buyerName').value = '';
-    document.getElementById('buyerAddress').value = '';
+    closeCart();
 };
+
 // --- MODAL CONTROLS ---
 
 window.togglePlay = () => {
@@ -362,68 +357,64 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
     });
     container.innerHTML += `<div class="grid grid-cols-2 gap-4">${gridCardsHtml}</div>`;
 
-    window.openModal = (index, mode) => {
-        const s = services[index];
-        currentSelectedService = s; 
+window.openModal = (index, mode) => {
+    const s = services[index];
+    currentSelectedService = s; 
 
-        // --- TAMBAHAN UNTUK TRACKING KLIK KARTU ---
-        if (typeof gtag === 'function' && mode === 'desc') {
-            gtag('event', 'view_service_detail', {
-                'service_name': s.title,
-                'content_type': 'service_card'
-            });
+    // --- TRACKING GA4: VIEW DETAIL ---
+    if (typeof gtag === 'function' && mode === 'desc') {
+        gtag('event', 'view_service_detail', {
+            'service_name': s.title
+        });
+    }
+
+    const modal = document.getElementById('detailModal');
+    const descMode = document.getElementById('modalDescMode');
+    const videoMode = document.getElementById('modalVideoMode');
+
+    modal.classList.remove('hidden');
+    // Tambahkan baris ini untuk memastikan modal berada di paling depan
+    modal.style.zIndex = "9999"; 
+
+    if (mode === 'video') {
+        descMode.classList.add('hidden');
+        videoMode.classList.remove('hidden');
+        const videoId = s.video.split('/').pop();
+        if (player && player.loadVideoById) {
+            player.loadVideoById(videoId);
         }
-        // ------------------------------------------
+    } else {
+        videoMode.classList.add('hidden');
+        descMode.classList.remove('hidden');
+        if (player && player.stopVideo) player.stopVideo();
+        
+        document.getElementById('modalTitle').innerText = s.title;
+        document.getElementById('modalDesc').innerHTML = s.desc;
+        document.getElementById('modalDuration').innerText = s.duration;
+        document.getElementById('modalPrice').innerText = s.price;
+        
+        const btnCart = document.getElementById('btnWA');
+        const isAlreadyInCart = cart.find(item => item.title === s.title);
 
-        const modal = document.getElementById('detailModal');
-        const descMode = document.getElementById('modalDescMode');
-        const videoMode = document.getElementById('modalVideoMode');
-
-        modal.classList.remove('hidden');
-
-        if (mode === 'video') {
-            descMode.classList.add('hidden');
-            videoMode.classList.remove('hidden');
-            const videoId = s.video.split('/').pop();
-            if (player && player.loadVideoById) player.loadVideoById(videoId);
+        if (isAlreadyInCart) {
+            btnCart.innerText = "SUDAH DI KERANJANG";
+            btnCart.className = "w-full bg-orange-500 text-white py-4 rounded-2xl font-bold shadow-lg";
+            btnCart.onclick = () => {
+                showToast(`${s.title} SUDAH ADA`, true);
+                closeModal();
+            };
         } else {
-            videoMode.classList.add('hidden');
-            descMode.classList.remove('hidden');
-            if (player && player.stopVideo) player.stopVideo();
-            
-            document.getElementById('modalTitle').innerText = s.title;
-            document.getElementById('modalDesc').innerHTML = s.desc;
-            document.getElementById('modalDuration').innerText = s.duration;
-            document.getElementById('modalPrice').innerText = s.price;
-            
-            const btnCart = document.getElementById('btnWA');
-            // 1. Cek apakah layanan ini sudah ada di dalam array cart
-            const isAlreadyInCart = cart.find(item => item.title === s.title);
-
-            if (isAlreadyInCart) {
-                // Jika sudah ada: Ubah teks tombol dan berikan pesan "Sudah Ada"
-                btnCart.innerText = "SUDAH DI KERANJANG";
-                btnCart.classList.remove('bg-green-500', 'bg-[#25D366]'); 
-                btnCart.classList.add('bg-orange-500');
-                btnCart.onclick = () => {
-                    showToast(`${s.title} SUDAH ADA DI KERANJANG`, true); // true = mode peringatan
-                    closeModal();
-                };
-            } else {
-                // Jika belum ada: Tampilan normal untuk menambah ke keranjang
-                btnCart.innerText = "TAMBAH KE KERANJANG";
-                btnCart.classList.remove('bg-orange-500');
-                btnCart.classList.add('bg-green-500');
-                btnCart.onclick = () => {
-                    cart.push(s);
-                    updateCartBadge();
-                    closeModal();
-                    showToast(`${s.title} DITAMBAHKAN!`); // Tanpa 'true' agar bisa terbang
-                };
-            }
+            btnCart.innerText = "TAMBAH KE KERANJANG";
+            btnCart.className = "w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold shadow-lg";
+            btnCart.onclick = () => {
+                cart.push(s);
+                updateCartBadge();
+                closeModal();
+                showToast(`${s.title} DITAMBAHKAN!`);
+            };
         }
-    };
-
+    }
+};
     window.handleBtnVideo = (e, index) => {
         e.stopPropagation();
 
