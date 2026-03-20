@@ -156,6 +156,15 @@ window.sendToWhatsApp = () => {
     const name = document.getElementById('buyerName').value;
     const address = document.getElementById('buyerAddress').value;
 
+   // --- TAMBAHAN UNTUK TRACKING KLIK KARTU ---
+    if (typeof gtag === 'function' && mode === 'desc') {
+        gtag('event', 'view_service_detail', {
+            'service_name': s.title,
+            'content_type': 'service_card'
+        });
+    }
+    // ------------------------------------------
+
     if (!name || !address) {
         alert("Mohon lengkapi Nama dan Alamat/Lokasi Acara!");
         return;
@@ -356,6 +365,16 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
     window.openModal = (index, mode) => {
         const s = services[index];
         currentSelectedService = s; 
+
+        // --- TAMBAHAN UNTUK TRACKING KLIK KARTU ---
+        if (typeof gtag === 'function' && mode === 'desc') {
+            gtag('event', 'view_service_detail', {
+                'service_name': s.title,
+                'content_type': 'service_card'
+            });
+        }
+        // ------------------------------------------
+
         const modal = document.getElementById('detailModal');
         const descMode = document.getElementById('modalDescMode');
         const videoMode = document.getElementById('modalVideoMode');
@@ -407,6 +426,16 @@ proses pengasuhan, bimbingan, dan pendidikan anak secara fisik, emosional, dan s
 
     window.handleBtnVideo = (e, index) => {
         e.stopPropagation();
+
+       // --- TAMBAHAN UNTUK TRACKING KLIK KARTU ---
+        if (typeof gtag === 'function' && mode === 'desc') {
+            gtag('event', 'view_service_detail', {
+                'service_name': s.title,
+                'content_type': 'service_card'
+            });
+        }
+        // ------------------------------------------
+
         window.openModal(index, 'video');
     };
 });
